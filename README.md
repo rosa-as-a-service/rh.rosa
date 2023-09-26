@@ -1,2 +1,3 @@
-# rh.rosa
-Red Hat ROSA lifecycle Ansible Collection
+# Ansible Collection - rh.rosa
+
+Documentation for the collection.
