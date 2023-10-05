@@ -1,5 +1,5 @@
 ---
-- include_vars: inventory/group_vars/vault.yaml
+- include_vars: vault.yaml
 
 - name: "Delete ROSA cluster: {{cluster_name}}"
   environment:
