@@ -1,0 +1,21 @@
+---
+- include_vars: inventory/group_vars/vault.yaml
+
+- name: "Delete ROSA cluster: {{cluster_name}}"
+  environment:
+    AWS_ACCESS_KEY_ID: "{{aws_access_key_id}}"
+    AWS_SECRET_ACCESS_KEY: "{{aws_secret_access_key}}"
+    AWS_DEFAULT_REGION: "{{region}}"
+    TF_VAR_AWS_ACCESS_KEY_ID: "{{aws_access_key_id}}"
+    TF_VAR_AWS_SECRET_ACCESS_KEY: "{{aws_secret_access_key}}"
+    TF_VAR_AWS_DEFAULT_REGION: "{{region}}"
+    TF_BACKEND_BUCKET: terraform-state-nreilly
+    TF_VAR_token: "{{rosa_token}}"
+  terraform:
+    project_path: "{{work_dir}}/{{cluster_name}}/terraform"
+    state: absent
+  register: "rosa_delete"
+
+- name: "Show output"
+  debug:
+    msg: "{{rosa_delete.outputs}}"
