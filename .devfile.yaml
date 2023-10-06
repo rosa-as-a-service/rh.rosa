@@ -1,0 +1,36 @@
+schemaVersion: 2.2.0
+metadata:
+  name: rh-rosa-ansible
+components:
+  - name: tooling-container
+    container:
+      image: quay.io/devspaces/ansible-creator-ee@sha256:3ff5d2d5f17c9c1e4a352d9922e27be09641647ac028a56845aaab6f6e3c7958
+      memoryRequest: 256M
+      memoryLimit: 6Gi
+      cpuRequest: 250m
+      cpuLimit: 2000m
+      args:
+        - sleep
+        - infinity
+commands:
+  - id: molecule-test
+    exec:
+      label: "Molecule: Run Scenario for ROSA Deploy Role"
+      commandLine: 'source $HOME/.bashrc && molecule test'
+      workingDir: ${PROJECT_SOURCE}/roles/rosa_deploy
+      group:
+        kind: run
+        isDefault: true
+      component: tooling-container
+  - id: molecule-verify
+    exec:
+      label: "Molecule: Validate ROSA Deploy Role"
+      commandLine: 'source $HOME/.bashrc && molecule verify'
+      workingDir: ${PROJECT_SOURCE}/roles/rosa_deploy
+      group:
+        kind: run
+        isDefault: true
+      component: tooling-container
+events:
+  postStart:
+    - "oc-install"
