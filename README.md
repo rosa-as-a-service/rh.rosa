@@ -32,6 +32,18 @@ Requirements
 
     This token is generated through the Red Hat Hybrid Cloud Console. The purpose of this token is to verify that you have access and permission to create and upgrade clusters. This token is unique to your account and should not be shared.
 
+- VPC and Subnets
+    This play assumes there has been a VPC and Subnet(s) pre-created.
+
+    The VPC and Subnet(s) must also pass a verification for egress traffic:
+    
+    ```rosa verify network --subnet-ids "${subnet-ids}" --region="${aws_region}" --role-arn="arn:aws:iam::${aws_account}:role/${role-name}"```
+
+    The VPC and subnets must also be tagged with the following:
+        
+        Name: "Tag:Tenency"
+        Value: "${cluster-name}
+
 
 Role Variables
 --------------
@@ -47,6 +59,8 @@ Role Variables
     The AWS Access Key with sufficient permissions to create a ROSSA cluster
 - rosa_token: "{{secret_rosa_token}}"
     The offline OCM token
+
+- cluster_name: "rosa-cluster"
 
 - rosa_version: "4.13.10"
 

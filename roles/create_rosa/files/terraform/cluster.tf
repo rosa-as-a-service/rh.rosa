@@ -53,7 +53,6 @@ module "operator_roles" {
   ]
 }
 
-
 resource "rhcs_cluster_rosa_classic" "rosa_sts_cluster" {
   name                        = var.cluster_name
   cloud_region                = var.cloud_region
@@ -99,4 +98,3 @@ resource "rhcs_cluster_wait" "rosa_sts_cluster" {
   cluster = rhcs_cluster_rosa_classic.rosa_sts_cluster.id
   timeout = 60
 }
-
