@@ -1,4 +1,7 @@
 ---
 - hosts: localhost
+  connection: local
+  become: false
+  gather_facts: false
   roles:
-    - role: rh.rosa.create_rosa
+      - role: rh.rosa.create

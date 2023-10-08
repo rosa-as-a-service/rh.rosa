@@ -1,5 +1,15 @@
 # Ansible Collection - rh.rosa
 
+## Playbooks
+
+### [rh.rosa.deploy_rosa](playbooks/README.md)
+
+Playbook use to provision a ROSA instance
+
+### [rh.rosa.destroy_rosa](playbooks/README.md)
+
+Playbook used to destroy a ROSA instance
+
 ## Roles
 
 ### [rh.rosa.create](roles/create_rosa/README.md)
