@@ -1,4 +1,4 @@
 ---
 - hosts: localhost
   roles:
-  - role: create_rosa
+    - role: rh.rosa.delete_rosa
