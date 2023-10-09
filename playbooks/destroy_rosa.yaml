@@ -1,4 +1,7 @@
 ---
 - hosts: localhost
+  connection: local
+  become: false
+  gather_facts: false
   roles:
-    - role: rh.rosa.delete_rosa
+      - role: rh.rosa.delete

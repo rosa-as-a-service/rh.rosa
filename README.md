@@ -1,24 +1,31 @@
 # Ansible Collection - rh.rosa
 
-Role Name
-=========
+## Playbooks
 
-- create_rosa
+### [rh.rosa.deploy_rosa](playbooks/README.md)
 
-    This playbook creates the following:
+Playbook use to provision a ROSA instance
 
-    - STS Roles and Policies required to install and support a ROSA STS Cluster
-    - A ROSA STS PrivateLink Cluster
-    - Operator Roles and Policies to operate a ROSA STS Cluster
-    - OIDC provider to provide trust to Roles
+### [rh.rosa.destroy_rosa](playbooks/README.md)
 
-- delete_rosa
+Playbook used to destroy a ROSA instance
 
-    This playbook deletes all resources created by the **create_rosa** playbook
+## Roles
 
+### [rh.rosa.create](roles/create_rosa/README.md)
 
-Requirements
-------------
+This Role creates the following:
+
+- STS Roles and Policies required to install and support a ROSA STS Cluster
+- A ROSA STS PrivateLink Cluster
+- Operator Roles and Policies to operate a ROSA STS Cluster
+- OIDC provider to provide trust to Roles
+
+### [rh.rosa.delete](roles/delete_rosa/README.md)
+
+This playbook deletes all resources created by the **rh.rosa.create** role
+
+## Requirements
 
 - An AWS IAM account with sufficient permissions to create a ROSA cluster [^1]
 
@@ -44,49 +51,39 @@ Requirements
         Name: "Tag:Tenency"
         Value: "${cluster-name}
 
+## Common Variables
 
-Role Variables
---------------
+| Variable Name | Default Value | Required | Description |
+| --- | --- | --- | --- |
+| aws_access_key_id | N/A | Yes | The AWS Access Key with sufficient permissions to create a ROSSA cluster |
+| aws_secret_access_key | N/A | Yes | The AWS Access Key with sufficient permissions to create a ROSSA cluster |
+| region | "ap-southeast-2" | Yes | The AWS Region that the resources will be deployed into |
+| rosa_token | N/A | Yes | The offline OCM token |
+| rosa_version | "4.13.10" | Yes | The version of ROSA to deploy |
 
-- region: "ap-southeast-2"
+## Dependencies
 
-    The AWS Region that the resources will be deployed into
-- aws_access_key_id: "{{ secret_aws_access_key_id }}"
-
-    The AWS Access Key with sufficient permissions to create a ROSSA cluster
-- aws_secret_access_key: "{{ secret_aws_secret_access_key }}"
-
-    The AWS Access Key with sufficient permissions to create a ROSSA cluster
-- rosa_token: "{{secret_rosa_token}}"
-    The offline OCM token
-
-- cluster_name: "rosa-cluster"
-
-- rosa_version: "4.13.10"
-
-- work_dir: /var/tmp/
-
-
-Dependencies
-------------
-Galaxy Collections:
-- cloud.terraform 1.1.1  
+Collections:
+- kuberenetes.core
+- cloud.terraform
 
 Terraform Providers:
 - terraform-redhat/rhcs: >= 1.4.0-prerelease.2
 - terraform-redhat/rosa-sts/aws: >=0.0.13
 - hashicorp/aws: >= 3.28
 
-Example Playbook
-----------------
+## Example Playbook
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
-
-    - hosts: ansible
+```yaml
+    ---
+    - hosts: localhost
+      connection: local
+      become: false
+      gather_facts: false
       roles:
-         - role: create_rosa
+         - role: rh.rosa.create
+```
 
-License
--------
+## License
 
-BSD
+[GPL3.0](LICENSE)
