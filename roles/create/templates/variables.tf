@@ -22,23 +22,23 @@ variable "url" {
 # OCM SHARED
 ################################
 
-#variable "AWS_ACCESS_KEY_ID" {
-#  type      = string
-#  sensitive = true
-#  default = "{{ aws_access_key_id }}"
-#}
-#
-#variable "AWS_SECRET_ACCESS_KEY" {
-#  type      = string
-#  sensitive = true
-#  default = "{{ aws_secret_access_key }}"
-#}
-#
-#variable "AWS_DEFAULT_REGION" {
-#  type      = string
-#  sensitive = true
-#  default = "{{ rosa_region }}"
-#}
+variable "AWS_ACCESS_KEY_ID" {
+  type      = string
+  sensitive = true
+  default = "{{ aws_access_key_id }}"
+}
+
+variable "AWS_SECRET_ACCESS_KEY" {
+  type      = string
+  sensitive = true
+  default = "{{ aws_secret_access_key }}"
+}
+
+variable "AWS_DEFAULT_REGION" {
+  type      = string
+  sensitive = true
+  default = "{{ rosa_region }}"
+}
 
 variable "create_account_roles" {
   type        = bool
