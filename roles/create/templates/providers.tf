@@ -11,7 +11,7 @@ terraform {
   }
   backend "s3" {
     region                 = "ap-southeast-2"
-    encrypt                = true
+    encrypt                = false
     skip_region_validation = true
     bucket                 = "{{ rosa_cluster_name }}-terraform"
   }
