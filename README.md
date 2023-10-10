@@ -80,7 +80,7 @@ You can either create your own playbook to extend the `rh.rosa.create` role, or 
 Example run using predefined playbook
 
 ```bash
-ansible-playbook rh.rosa.deploy -v --vault-id @prompt
+ansible-playbook rh.rosa.deploy_rosa -v --vault-id @prompt
 ```
 
 > **Note**
