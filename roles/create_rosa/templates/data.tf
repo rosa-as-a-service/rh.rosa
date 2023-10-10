@@ -11,14 +11,14 @@ data "rhcs_versions" "all" {}
 
 data "aws_vpc" "tenent_vpc" {
   filter {
-    name   = "tag:Tenent"
+    name   = "tag:Name"
     values = ["{{cluster_name}}"]
   }
 }
 
 data "aws_subnets" "tenent_subnet_ids" {
   filter {
-    name   = "tag:Tenent"
+    name   = "tag:Name"
     values = ["{{cluster_name}}"]
   }
 }

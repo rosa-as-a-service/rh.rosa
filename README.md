@@ -27,30 +27,28 @@ This playbook deletes all resources created by the **rh.rosa.create** role
 
 ## Requirements
 
-- An AWS IAM account with sufficient permissions to create a ROSA cluster [^1]
+- **An AWS IAM account with sufficient permissions to create a ROSA cluster [^1]**
 
-- Thoroughly read and understand the [Red Hat Openshift Service on AWS](https://docs.aws.amazon.com/ROSA/latest/userguide/what-is-rosa.html) documentation
+- **Thoroughly read and understand the [Red Hat Openshift Service on AWS](https://docs.aws.amazon.com/ROSA/latest/userguide/what-is-rosa.html) documentation**
 
-- Complete the [ROSA getting started](https://console.redhat.com/openshift/create/rosa/getstarted) requirements
+- **Complete the [ROSA getting started](https://console.redhat.com/openshift/create/rosa/getstarted) requirements**
 
-    You must complete some AWS account and local configurations to create and managed ROSA clusters.
+  You must complete some AWS account and local configurations to create and managed ROSA clusters.
 
-- An offline OCM token
+- **An offline OCM token**
 
-    This token is generated through the Red Hat Hybrid Cloud Console. The purpose of this token is to verify that you have access and permission to create and upgrade clusters. This token is unique to your account and should not be shared.
+  This token is generated through the Red Hat Hybrid Cloud Console. The purpose of this token is to verify that you have access and permission to create and upgrade clusters. This token is unique to your account and should not be shared.
 
-- VPC and Subnets
-    This play assumes there has been a VPC and Subnet(s) pre-created.
+- **VPC and Subnets**
 
-    The VPC and Subnet(s) must also pass a verification for egress traffic:
-    
-    ```rosa verify network --subnet-ids "${subnet-ids}" --region="${aws_region}" --role-arn="arn:aws:iam::${aws_account}:role/${role-name}"```
+  This play assumes there has been a VPC and Subnet(s) pre-created.
 
-    The VPC and subnets must also be tagged with the following:
-        
-        Name: "Tag:Tenency"
-        Value: "${cluster-name}
+  The VPC and Subnet(s) must also pass a verification for egress traffic:
 
+  ```bash
+  rosa verify network --subnet-ids "${subnet-ids}" --region="${aws_region}" --role-arn="arn:aws:iam::${aws_account}:role/${role-name}"
+  ````
+ 
 ## Common Variables
 
 | Variable Name | Default Value | Required | Description |
@@ -74,14 +72,35 @@ Terraform Providers:
 
 ## Example Playbook
 
+You can either create your own playbook to extend the `rh.rosa.create` role, or use the predefined playbook `rh.rosa.deploy`.
+
+Example run using predefined playbook
+
+```bash
+ansible-playbook rh.rosa.deploy -v --vault-id @prompt
+```
+
+> **Note**
+>
+> It is highly recommended you place the required variables in `group_vars/all/{vars,secrets}.yml`
+>
+> This will ensure the required variables are used.
+
+Example custom playbook
+
 ```yaml
+# requires aws cli to be installed on the Ansible management host
     ---
     - hosts: localhost
       connection: local
       become: false
       gather_facts: false
+      pre_tasks:
+        - name: Confirm AWS credentials are valid
+          ansible.builtin.shell:
+            cmd: 'aws sts get-caller-identity'
       roles:
-         - role: rh.rosa.create
+        - role: rh.rosa.create
 ```
 
 ## License
