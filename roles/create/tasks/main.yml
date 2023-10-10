@@ -27,7 +27,6 @@
     - output.tf
     - variables.tf
     - data.tf
-    - providers.tf
 
 - name: "Create ROSA cluster: {{ rosa_cluster_name }}"
   environment:
