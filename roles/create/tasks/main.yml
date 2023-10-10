@@ -1,49 +1,49 @@
 ---
 - name: Create work directory
   ansible.builtin.file:
-    path: "{{work_dir}}/{{cluster_name}}/terraform/clusters/"
+    path: "{{ work_dir }}/{{ cluster_name }}/terraform/clusters/"
     state: directory
     mode: '0755'
 
 - name: Create s3 bucket to store state
   environment:
-    AWS_ACCESS_KEY_ID: "{{aws_access_key_id}}"
-    AWS_SECRET_ACCESS_KEY: "{{aws_secret_access_key}}"
-    AWS_DEFAULT_REGION: "{{region}}"
+    AWS_ACCESS_KEY_ID: "{{ aws_access_key_id }}"
+    AWS_SECRET_ACCESS_KEY: "{{a ws_secret_access_key }}"
+    AWS_DEFAULT_REGION: "{{ rosa_region }}"
   cloud.s3_bucket:
-    name:  "{{ cluster_name }}-terraform"
+    name:  "{{ rosa_cluster_name }}-terraform"
     state: present
 
 - name: Copy terraform module to work_dir
   ansible.builtin.copy:
     src: files/terraform/
-    dest: "{{ work_dir }}/{{ cluster_name }}/terraform/"
+    dest: "{{ work_dir }}/{{ rosa_cluster_name }}/terraform/"
 
 - name: Copy terraform files to work_dir
   ansible.builtin.template:
     src: "{{ item }}"
-    dest: "{{ work_dir }}/{{ cluster_name }}/terraform/{{ item }}"
+    dest: "{{ work_dir }}/{{ rosa_cluster_name }}/terraform/{{ item }}"
   with_items:
     - output.tf
     - variables.tf
     - data.tf
 
-- name: "Create ROSA cluster: {{ cluster_name }}"
+- name: "Create ROSA cluster: {{ rosa_cluster_name }}"
   environment:
-    AWS_ACCESS_KEY_ID: "{{aws_access_key_id}}"
-    AWS_SECRET_ACCESS_KEY: "{{aws_secret_access_key}}"
-    AWS_DEFAULT_REGION: "{{region}}"
-    TF_VAR_AWS_ACCESS_KEY_ID: "{{aws_access_key_id}}"
-    TF_VAR_AWS_SECRET_ACCESS_KEY: "{{aws_secret_access_key}}"
-    TF_VAR_AWS_DEFAULT_REGION: "{{region}}"
-    TF_BACKEND_BUCKET: terraform-state-nreilly
-    TF_VAR_token: "{{rosa_token}}"
+    AWS_ACCESS_KEY_ID: "{{ aws_access_key_id }}"
+    AWS_SECRET_ACCESS_KEY: "{{ aws_secret_access_key }}"
+    AWS_DEFAULT_REGION: "{{ rosa_region }}"
+    TF_VAR_AWS_ACCESS_KEY_ID: "{{ aws_access_key_id }}"
+    TF_VAR_AWS_SECRET_ACCESS_KEY: "{{ aws_secret_access_key }}"
+    TF_VAR_AWS_DEFAULT_REGION: "{{ rosa_region }}"
+    TF_BACKEND_BUCKET: "{{ rosa_cluster_name }}-terraform"
+    TF_VAR_token: "{{ rosa_token }}"
   cloud.terraform:
-    project_path: "{{work_dir}}/{{cluster_name}}/terraform"
+    project_path: "{{ work_dir }}/{{ rosa_cluster_name }}/terraform"
     force_init: true
     state: present
   register: "create"
 
 - name: "Show output"
   ansible.builtin.debug:
-    msg: "{{create.outputs}}"
+    msg: "{{ create.outputs }}"

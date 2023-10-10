@@ -1,2 +1,3 @@
 ---
 # defaults file for rh.rosa.create
+rosa_region: ap-southeast-2

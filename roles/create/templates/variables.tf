@@ -10,7 +10,7 @@ variable "ocm_environment" {
 variable "token" {
   type      = string
   sensitive = true
-  default   = "{{rosa_token}}"
+  default   = "{{ rosa_token }}"
 }
 
 variable "url" {
@@ -25,19 +25,19 @@ variable "url" {
 #variable "AWS_ACCESS_KEY_ID" {
 #  type      = string
 #  sensitive = true
-#  default = "{{aws_access_key_id}}"
+#  default = "{{ aws_access_key_id }}"
 #}
 #
 #variable "AWS_SECRET_ACCESS_KEY" {
 #  type      = string
 #  sensitive = true
-#  default = "{{aws_secret_access_key}}"
+#  default = "{{ aws_secret_access_key }}"
 #}
 #
 #variable "AWS_DEFAULT_REGION" {
 #  type      = string
 #  sensitive = true
-#  default = "{{region}}"
+#  default = "{{ rosa_region }}"
 #}
 
 variable "create_account_roles" {
@@ -48,22 +48,22 @@ variable "create_account_roles" {
 
 variable "operator_role_prefix" {
   type = string
-  default = "{{cluster_name}}"
+  default = "{{ rosa_cluster_name }}"
 }
 
 variable "account_role_prefix" {
   type = string
-  default = "{{cluster_name}}"
+  default = "{{ rosa_cluster_name }}"
 }
 
 variable "cluster_name" {
   type    = string
-  default = "{{cluster_name}}"
+  default = "{{ rosa_cluster_name }}"
 }
 
 variable "cloud_region" {
   type    = string
-  default = "{{region}}"
+  default = "{{ rosa_region }}"
 }
 
 ################################

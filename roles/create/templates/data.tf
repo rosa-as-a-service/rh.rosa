@@ -19,7 +19,7 @@ data "aws_vpc" "tenent_vpc" {
 data "aws_subnets" "tenent_subnet_ids" {
   filter {
     name   = "tag:Name"
-    values = ["{{cluster_name}}"]
+    values = ["{{ rosa_cluster_name }}"]
   }
 }
 data "aws_subnet" "tenent_subnet_id" {

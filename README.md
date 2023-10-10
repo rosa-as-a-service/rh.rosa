@@ -55,7 +55,7 @@ This playbook deletes all resources created by the **rh.rosa.create** role
 | --- | --- | --- | --- |
 | aws_access_key_id | N/A | Yes | The AWS Access Key with sufficient permissions to create a ROSSA cluster |
 | aws_secret_access_key | N/A | Yes | The AWS Access Key with sufficient permissions to create a ROSSA cluster |
-| region | "ap-southeast-2" | Yes | The AWS Region that the resources will be deployed into |
+| rosa_region | "ap-southeast-2" | Yes | The AWS Region that the resources will be deployed into |
 | rosa_token | N/A | Yes | The offline OCM token |
 | rosa_version | "4.13.10" | Yes | The version of ROSA to deploy |
 
