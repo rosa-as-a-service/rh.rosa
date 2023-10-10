@@ -5,4 +5,4 @@ aws_secret_access_key: "{{ secret_aws_secret_access_key }}"
 rosa_version: "4.13.10"
 rosa_vpc_cidr: 10.1.0.0/16
 rosa_token: "{{secret_rosa_token}}"
-work_dir: /var/tmp/
+work_dir: /var/tmp
