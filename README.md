@@ -59,8 +59,8 @@ This playbook deletes all resources created by the **rh.rosa.create** role
 | rosa_token | N/A | Yes | The offline OCM token |
 | rosa_version | "4.13.10" | Yes | The version of ROSA to deploy |
 | rosa_vpc_name | N/A | Yes | The Name of the VPC as found in `Tag:Name` |
-| rosa_subnet_1 | N/A | No | The name of the first subnet |
-| rosa_subnet_2 | N/A | No | The name of the second subnet |
+| rosa_subnet_1 | N/A | No | The name of the first subnet as found in `Tag:Name` |
+| rosa_subnet_2 | N/A | No | The name of the second subnet as found in `Tag:Name` |
 
 ## Dependencies
 
