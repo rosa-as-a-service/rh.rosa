@@ -61,6 +61,7 @@ This playbook deletes all resources created by the **rh.rosa.create** role
 | rosa_vpc_name | N/A | Yes | The Name of the VPC as found in `Tag:Name` |
 | rosa_subnet_1 | N/A | No | The name of the first subnet as found in `Tag:Name` |
 | rosa_subnet_2 | N/A | No | The name of the second subnet as found in `Tag:Name` |
+| rosa_cluster_name | N/A | Yes | The name of the ROSA cluster |
 
 ## Dependencies
 
