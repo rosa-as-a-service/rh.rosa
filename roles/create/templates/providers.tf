@@ -13,6 +13,7 @@ terraform {
     region                 = "ap-southeast-2"
     encrypt                = true
     skip_region_validation = true
+    bucket                 = "{{ rosa_cluster_name }}-terraform"
   }
 }
 
