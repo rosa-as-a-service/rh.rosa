@@ -1,8 +1,8 @@
 {
     "files.associations": {
-        "*.yaml": "ansible",
-        "*.yml": "ansible"
-      },
+      "*.yaml": "yaml",
+      "*.yml": "yaml",
+    },
     "ansible.ansible.path": "/usr/local/bin/ansible",
     "ansible.python.interpreterPath": "/bin/python",
     "ansible.ansible.useFullyQualifiedCollectionNames": true,

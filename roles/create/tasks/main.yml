@@ -42,8 +42,8 @@
     project_path: "{{work_dir}}/{{cluster_name}}/terraform"
     force_init: true
     state: present
-  register: "create_rosa"
+  register: "create"
 
 - name: "Show output"
   ansible.builtin.debug:
-    msg: "{{create_rosa.outputs}}"
+    msg: "{{create.outputs}}"

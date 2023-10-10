@@ -12,8 +12,8 @@
   cloud.terraform:
     project_path: "{{work_dir}}/{{cluster_name}}/terraform"
     state: absent
-  register: "rosa_delete"
+  register: "rh.rosa.delete"
 
 - name: "Show output"
   ansible.builtin.debug:
-    msg: "{{rosa_delete.outputs}}"
+    msg: "{{rh.rosa.delete.outputs}}"

@@ -1,0 +1,9 @@
+---
+- name: Bootstrap Hub
+  hosts: localhost
+  connection: local
+  become: false
+  gather_facts: false
+  roles:
+    - rh.rosa.bootstrap_hub
+

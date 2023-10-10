@@ -12,7 +12,7 @@ Playbook used to destroy a ROSA instance
 
 ## Roles
 
-### [rh.rosa.create](roles/create_rosa/README.md)
+### [rh.rosa.create](roles/create/README.md)
 
 This Role creates the following:
 
@@ -21,7 +21,7 @@ This Role creates the following:
 - Operator Roles and Policies to operate a ROSA STS Cluster
 - OIDC provider to provide trust to Roles
 
-### [rh.rosa.delete](roles/delete_rosa/README.md)
+### [rh.rosa.delete](roles/delete/README.md)
 
 This playbook deletes all resources created by the **rh.rosa.create** role
 
