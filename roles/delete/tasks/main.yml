@@ -9,7 +9,7 @@
     TF_VAR_AWS_DEFAULT_REGION: "{{region}}"
     TF_BACKEND_BUCKET: terraform-state-nreilly
     TF_VAR_token: "{{rosa_token}}"
-  cloud.terraform:
+  cloud.terraform.terraform:
     project_path: "{{work_dir}}/{{cluster_name}}/terraform"
     state: absent
   register: "rh.rosa.delete"

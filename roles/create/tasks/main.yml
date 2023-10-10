@@ -38,7 +38,7 @@
     TF_VAR_AWS_DEFAULT_REGION: "{{ rosa_region }}"
     TF_BACKEND_BUCKET: "{{ rosa_cluster_name }}-terraform"
     TF_VAR_token: "{{ rosa_token }}"
-  cloud.terraform:
+  cloud.terraform.terraform:
     project_path: "{{ work_dir }}/{{ rosa_cluster_name }}/terraform"
     force_init: true
     state: present
