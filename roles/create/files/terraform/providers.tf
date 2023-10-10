@@ -9,11 +9,11 @@ terraform {
       source  = "terraform-redhat/rhcs"
     }
   }
-#  backend "s3" {
-#    region                 = "ap-southeast-2"
-#    encrypt                = true
-#    skip_region_validation = true
-#  }
+  backend "s3" {
+    region                 = "ap-southeast-2"
+    encrypt                = true
+    skip_region_validation = true
+  }
 }
 
 provider "rhcs" {
