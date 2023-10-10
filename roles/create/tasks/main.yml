@@ -8,7 +8,7 @@
 - name: Create s3 bucket to store state
   environment:
     AWS_ACCESS_KEY_ID: "{{ aws_access_key_id }}"
-    AWS_SECRET_ACCESS_KEY: "{{a ws_secret_access_key }}"
+    AWS_SECRET_ACCESS_KEY: "{{ aws_secret_access_key }}"
     AWS_DEFAULT_REGION: "{{ rosa_region }}"
   amazon.cloud.s3_bucket:
     name:  "{{ rosa_cluster_name }}-terraform"
