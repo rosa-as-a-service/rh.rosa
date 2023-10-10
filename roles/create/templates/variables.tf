@@ -56,7 +56,7 @@ variable "account_role_prefix" {
   default = "{{ rosa_cluster_name }}"
 }
 
-variable "cluster_name" {
+variable "rosa_cluster_name" {
   type    = string
   default = "{{ rosa_cluster_name }}"
 }

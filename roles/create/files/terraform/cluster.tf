@@ -54,7 +54,7 @@ module "operator_roles" {
 }
 
 resource "rhcs_cluster_rosa_classic" "rosa_sts_cluster" {
-  name                        = var.cluster_name
+  name                        = var.rosa_cluster_name
   cloud_region                = var.cloud_region
   aws_account_id              = data.aws_caller_identity.current.account_id
   version                     = var.ocp_version

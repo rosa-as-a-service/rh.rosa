@@ -1,7 +1,7 @@
 ---
 - name: Create work directory
   ansible.builtin.file:
-    path: "{{ work_dir }}/{{ cluster_name }}/terraform/clusters/"
+    path: "{{ work_dir }}/{{ rosa_cluster_name }}/terraform/clusters/"
     state: directory
     mode: '0755'
 
