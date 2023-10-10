@@ -45,6 +45,7 @@ tags:
 dependencies:
   "kubernetes.core": "*"
   "cloud.terraform": "*"
+  "amazon.cloud": "*"
 # The URL of the originating SCM repository
 repository: https://github.com/rosa-as-a-service/rh.rosa
 
