@@ -1,6 +1,6 @@
 ---
 # defaults for rh.rosa.delete
-region: "ap-southeast-2"
+rosa_region: "ap-southeast-2"
 rosa_version: "4.13.13"
 rosa_vpc_cidr: 10.1.0.0/16
 work_dir: /var/tmp
