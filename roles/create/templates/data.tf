@@ -12,16 +12,17 @@ data "rhcs_versions" "all" {}
 data "aws_vpc" "tenent_vpc" {
   filter {
     name   = "tag:Name"
-    values = ["{{cluster_name}}"]
+    values = ["{{ rosa_vpc_name }}"]
   }
 }
 
 data "aws_subnets" "tenent_subnet_ids" {
   filter {
     name   = "tag:Name"
-    values = ["{{ rosa_cluster_name }}"]
+    values = ["{{ rosa_subnet_1 | default(rosa_vpc_name + '-2a') }}", "{{ rosa_subnet_2 | default(rosa_vpc_name + '-2b') }}"]
   }
 }
+
 data "aws_subnet" "tenent_subnet_id" {
   for_each = toset(data.aws_subnets.tenent_subnet_ids.ids)
   id = each.value
