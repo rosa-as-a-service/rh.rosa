@@ -9,12 +9,6 @@ terraform {
       source  = "terraform-redhat/rhcs"
     }
   }
-  backend "s3" {
-    region                 = "ap-southeast-2"
-    encrypt                = false
-    skip_region_validation = true
-    bucket                 = "{{ rosa_cluster_name }}-terraform"
-  }
 }
 
 provider "rhcs" {
