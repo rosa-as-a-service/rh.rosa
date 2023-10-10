@@ -10,49 +10,6 @@ locals {
   }
 }
 
-module "create_account_roles" {
-  count   = var.create_account_roles == true ? 1 : 0
-  source  = "terraform-redhat/rosa-sts/aws"
-  version = ">=0.0.13"
-
-  create_operator_roles = false
-  create_oidc_provider  = false
-  create_account_roles  = true
-
-  all_versions           = data.rhcs_versions.all
-  account_role_prefix    = var.account_role_prefix
-  ocm_environment        = var.ocm_environment
-  rosa_openshift_version = ""
-  account_role_policies  = data.rhcs_policies.all_policies.account_role_policies
-  operator_role_policies = data.rhcs_policies.all_policies.operator_role_policies
-  path                   = var.path
-}
-
-resource "time_sleep" "wait_for_role_propagation" {
-  create_duration = "60s"
-  depends_on = [
-    module.create_account_roles
-  ]
-}
-
-module "operator_roles" {
-  source  = "terraform-redhat/rosa-sts/aws"
-  version = ">=0.0.13"
-
-  create_operator_roles = true
-  create_oidc_provider  = true
-  create_account_roles  = false
-
-  cluster_id                  = rhcs_cluster_rosa_classic.rosa_sts_cluster.id
-  rh_oidc_provider_thumbprint = rhcs_cluster_rosa_classic.rosa_sts_cluster.sts.thumbprint
-  rh_oidc_provider_url        = rhcs_cluster_rosa_classic.rosa_sts_cluster.sts.oidc_endpoint_url
-  operator_roles_properties   = data.rhcs_rosa_operator_roles.operator_roles.operator_iam_roles
-  tags                        = var.tags
-  depends_on = [
-    resource.time_sleep.wait_for_role_propagation
-  ]
-}
-
 resource "rhcs_cluster_rosa_classic" "rosa_sts_cluster" {
   name                        = var.rosa_cluster_name
   cloud_region                = var.cloud_region
@@ -97,4 +54,41 @@ resource "rhcs_cluster_rosa_classic" "rosa_sts_cluster" {
 resource "rhcs_cluster_wait" "rosa_sts_cluster" {
   cluster = rhcs_cluster_rosa_classic.rosa_sts_cluster.id
   timeout = 60
+}
+
+module "operator_roles" {
+  source  = "terraform-redhat/rosa-sts/aws"
+  version = ">=0.0.13"
+  create_operator_roles = true
+  create_oidc_provider  = true
+  create_account_roles  = false
+  cluster_id                  = rhcs_cluster_rosa_classic.rosa_sts_cluster.id
+  rh_oidc_provider_thumbprint = rhcs_cluster_rosa_classic.rosa_sts_cluster.sts.thumbprint
+  rh_oidc_provider_url        = rhcs_cluster_rosa_classic.rosa_sts_cluster.sts.oidc_endpoint_url
+  operator_roles_properties   = data.rhcs_rosa_operator_roles.operator_roles.operator_iam_roles
+  tags                        = var.tags
+}
+
+resource "time_sleep" "wait_for_role_propagation" {
+  create_duration = "60s"
+  depends_on = [
+    module.create_account_roles
+  ]
+}
+
+module "create_account_roles" {
+  count   = var.create_account_roles == true ? 1 : 0
+  source  = "terraform-redhat/rosa-sts/aws"
+  version = ">=0.0.13"
+  create_operator_roles = false
+  create_oidc_provider  = false
+  create_account_roles  = true
+
+  all_versions           = data.rhcs_versions.all
+  account_role_prefix    = var.account_role_prefix
+  ocm_environment        = var.ocm_environment
+  rosa_openshift_version = ""
+  account_role_policies  = data.rhcs_policies.all_policies.account_role_policies
+  operator_role_policies = data.rhcs_policies.all_policies.operator_role_policies
+  path                   = var.path
 }
