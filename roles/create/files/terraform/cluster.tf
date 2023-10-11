@@ -21,7 +21,7 @@ resource "rhcs_cluster_rosa_classic" "rosa_sts_cluster" {
   private                     = var.private
   aws_subnet_ids              = [for subnet_id in data.aws_subnet.tenent_subnet_id : subnet_id.id]
   availability_zones          = [for subnet_id in data.aws_subnet.tenent_subnet_id : subnet_id.availability_zone]
-  multi_az                    = length(data.aws_subnet.tenent_subnet_id) > 1 ? true : false
+  multi_az                    = length(data.aws_subnet.tenent_subnet_id) > 2 ? true : false
   pod_cidr                    = var.pod_cidr
   service_cidr                = var.service_cidr
   channel_group               = var.channel_group
@@ -40,7 +40,7 @@ resource "rhcs_cluster_rosa_classic" "rosa_sts_cluster" {
   kms_key_arn                 = var.kms_key_arn
   max_replicas                = var.max_replicas
   min_replicas                = var.min_replicas
-  replicas                    = length(data.aws_subnet.tenent_subnet_id) > 1 ? 3 : 2
+  replicas                    = length(data.aws_subnet.tenent_subnet_id) > 2 ? 3 : 2
   proxy                       = var.proxy
   tags                        = var.tags
   properties = {
