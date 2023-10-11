@@ -18,6 +18,8 @@ provider "rhcs" {
 
 provider "aws" {
   region                 = "ap-southeast-2"
+  access_key             = var.AWS_ACCESS_KEY_ID
+  secret_key             = var.AWS_SECRET_ACCESS_KEY
   skip_region_validation = true
   ignore_tags {
     key_prefixes = ["kubernetes.io/"]
