@@ -19,8 +19,8 @@ resource "rhcs_cluster_rosa_classic" "rosa_sts_cluster" {
   machine_cidr                = data.aws_vpc.tenent_vpc.cidr_block
   aws_private_link            = var.aws_private_link
   private                     = var.private
-  aws_subnet_ids              = [for subnet_id in data.aws_subnet.tenent_subnet_id : subnet_id.id]
-  availability_zones          = [for subnet_id in data.aws_subnet.tenent_subnet_id : subnet_id.availability_zone]
+  aws_subnet_ids              = length(data.aws_subnet.tenent_subnet_id) > 2 ? [for subnet_id in data.aws_subnet.tenent_subnet_id : subnet_id.id] : data.aws_subnet.tenent_subnet_id[0].id
+  availability_zones          = length(data.aws_subnet.tenent_subnet_id) > 2 ? [for subnet_id in data.aws_subnet.tenent_subnet_id : subnet_id.availability_zone] : data.aws_subnet.tenent_subnet_id[0].id
   multi_az                    = length(data.aws_subnet.tenent_subnet_id) > 2 ? true : false
   pod_cidr                    = var.pod_cidr
   service_cidr                = var.service_cidr
