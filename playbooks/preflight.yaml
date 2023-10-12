@@ -6,15 +6,19 @@
   tasks:
     - name: Ensure AWS long lived credentials are configured
       ansible.builtin.blockinfile:
-        dest: ~/.aws/credentials
-        content: |
+        block: |
           [rosa]
           aws_access_key_id = {{ aws_access_key_id }}
           aws_secret_access_key = {{ aws_secret_access_key }}
-        insertbefore: "[default]"
+        create: true
+        mode: u=rwX,g=-,o=-
+        insertafter: EOF
+        path: ~/.aws/credentials
 
     - name: Check egress is configured correctly
       ansible.builtin.shell:
         cmd: |
-          rosa login --token {{ rosa_token }}
-          rosa verify network --subnet-ids \"{{ rosa_subnets | map(attribute='id') | join(',') }}\" --region=\"ap-southeast-2\" --role-arn=\"arn:aws:iam::{{ rosa_aws_account_id }}:role/{{ rosa_aws_role_name }}\""
+          aws configure set region ap-southeast-2 --profile rosa
+          aws configure set profile rosa
+          rosa login --token "{{ rosa_token }}"
+          rosa verify network --subnet-ids "{{ rosa_subnets | map(attribute='id') | join(',') }}" --region="ap-southeast-2" --role-arn="arn:aws:iam::{{ rosa_aws_account_id }}:role/{{ rosa_aws_role_name }}"
