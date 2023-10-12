@@ -48,13 +48,15 @@ This playbook deletes all resources created by the **rh.rosa.create** role
   ```bash
   rosa verify network --subnet-ids "${subnet-ids}" --region="${aws_region}" --role-arn="arn:aws:iam::${aws_account}:role/${role-name}"
   ````
- 
+
 ## Common Variables
 
 | Variable Name | Default Value | Required | Description |
 | --- | --- | --- | --- |
 | aws_access_key_id | N/A | Yes | The AWS Access Key with sufficient permissions to create a ROSSA cluster |
 | aws_secret_access_key | N/A | Yes | The AWS Access Key with sufficient permissions to create a ROSSA cluster |
+| rosa_aws_account_id | N/A | Yes | The AWS Account ID |
+| rosa_aws_role_name | "{{ rosa_cluster_name }}-Installer-Role" | Yes | The name of the role used for the preflight validations |
 | rosa_region | "ap-southeast-2" | Yes | The AWS Region that the resources will be deployed into |
 | rosa_token | N/A | Yes | The offline OCM token |
 | rosa_version | "4.13.10" | Yes | The version of ROSA to deploy |
