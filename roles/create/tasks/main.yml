@@ -26,17 +26,20 @@
 
 - name: "Create ROSA cluster: {{ rosa_cluster_name }}"
   environment:
-    TF_VAR_AWS_ACCESS_KEY_ID: "{{ aws_access_key_id }}"
-    TF_VAR_AWS_SECRET_ACCESS_KEY: "{{ aws_secret_access_key }}"
-    TF_VAR_AWS_DEFAULT_REGION: "{{ rosa_region }}"
     TF_BACKEND_BUCKET: "{{ rosa_cluster_name }}-terraform"
-    TF_VAR_token: "{{ rosa_token }}"
     TF_LOG: debug
     TF_LOG_PATH: "{{ work_dir }}/tf_rosa_deploy.log"
   cloud.terraform.terraform:
-    project_path: "{{ work_dir }}/{{ rosa_cluster_name }}/terraform"
+    complex_vars: false
     force_init: true
+    project_path: "{{ work_dir }}/{{ rosa_cluster_name }}/terraform"
+    provider_upgrade: true
     state: present
+    variables:
+      token: "{{ rosa_token }}"
+      AWS_ACCESS_KEY_ID: "{{ aws_access_key_id }}"
+      AWS_SECRET_ACCESS_KEY: "{{ aws_secret_access_key }}"
+      AWS_DEFAULT_REGION: "{{ rosa_region }}"
   register: "create"
 
 - name: "Show output"
