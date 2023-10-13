@@ -27,7 +27,3 @@ data "aws_subnet" "tenent_subnet_id" {
   for_each = toset(data.aws_subnets.tenent_subnet_ids.ids)
   id = each.value
 }
-
-#data "first_subnet" {
-#
-#}

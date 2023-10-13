@@ -40,7 +40,7 @@ resource "rhcs_cluster_rosa_classic" "rosa_sts_cluster" {
   kms_key_arn                 = var.kms_key_arn
   max_replicas                = var.max_replicas
   min_replicas                = var.min_replicas
-  replicas                    = length(data.aws_subnet.tenent_subnet_id) > 2 ? 3 : 2
+  replicas                    = var.rosa_worker_nodes
   proxy                       = var.proxy
   tags                        = var.tags
   properties = {

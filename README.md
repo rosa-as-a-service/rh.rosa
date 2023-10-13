@@ -57,11 +57,12 @@ This playbook deletes all resources created by the **rh.rosa.create** role
 | aws_secret_access_key | N/A | Yes | The AWS Access Key with sufficient permissions to create a ROSSA cluster |
 | rosa_aws_account_id | N/A | Yes | The AWS Account ID |
 | rosa_aws_role_name | "{{ rosa_cluster_name }}-Installer-Role" | Yes | The name of the role used for the preflight validations |
-| rosa_region | "ap-southeast-2" | Yes | The AWS Region that the resources will be deployed into |
-| rosa_token | N/A | Yes | The offline OCM token |
+| rosa_worker_nodes | 2 | Yes | The number of initial work nodes |
 | rosa_version | "4.13.10" | Yes | The version of ROSA to deploy |
 | rosa_vpc_cidr | N/A | Yes | The subnet of the VPC EG 10.0.0.0/24 |
 | rosa_vpc_name | N/A | Yes | The Name of the VPC as found in `Tag:Name` |
+| rosa_token | N/A | Yes | The offline OCM token |
+| rosa_region | "ap-southeast-2" | Yes | The AWS Region that the resources will be deployed into |
 | rosa_subnet_1 | N/A | No | The name of the first subnet as found in `Tag:Name` |
 | rosa_subnet_2 | N/A | No | The name of the second subnet as found in `Tag:Name` |
 | rosa_cluster_name | N/A | Yes | The name of the ROSA cluster |

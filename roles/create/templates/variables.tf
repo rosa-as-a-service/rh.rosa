@@ -61,6 +61,11 @@ variable "rosa_cluster_name" {
   default = "{{ rosa_cluster_name }}"
 }
 
+variable "rosa_worker_nodes" {
+  type    = integer
+  default = 2
+}
+
 variable "cloud_region" {
   type    = string
   default = "{{ rosa_region }}"
