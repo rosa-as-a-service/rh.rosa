@@ -4,11 +4,33 @@
 
 ### [rh.rosa.deploy_rosa](playbooks/README.md)
 
-Playbook use to provision a ROSA instance
+Playbook used to provision a ROSA instance
 
 ### [rh.rosa.destroy_rosa](playbooks/README.md)
 
 Playbook used to destroy a ROSA instance
+
+### [rh.rosa.preflight](playbooks/README.md)
+
+Playbook used to validate the requirements for deploying ROSA
+
+### Deploy Hub and Spoke ROSA Instances
+
+#### [rh.rosa.deploy_hub_rosa](playbooks/README.md)
+
+Playbook used to provision a Hub ROSA instance
+
+#### [rh.rosa.bootstrap_hub](playbooks/README.md)
+
+Playbook used to bootstrap a Hub instance
+
+#### [rh.rosa.deploy_spoke_rosa](playbooks/README.md)
+
+Playbook used to provision a Spoke ROSA instance
+
+#### [rh.rosa.bootstrap_spoke](playbooks/README.md)
+
+Playbook used to bootstrap a Spoke instance
 
 ## Roles
 
@@ -64,9 +86,16 @@ This playbook deletes all resources created by the **rh.rosa.create** role
 | rosa_vpc_name | N/A | Yes | The Name of the VPC as found in `Tag:Name` |
 | rosa_token | N/A | Yes | The offline OCM token |
 | rosa_region | "ap-southeast-2" | Yes | The AWS Region that the resources will be deployed into |
-| rosa_subnet_1 | N/A | No | The name of the first subnet as found in `Tag:Name` |
-| rosa_subnet_2 | N/A | No | The name of the second subnet as found in `Tag:Name` |
+| rosa_subnets | N/A | No | Details of the subnet(s) that ROSA should be deployed into. The quanity of subnets can either be 1, or greater than or equal to 3. Each subnet must have a `name` key, and may have `id`, and `availbility_zone` keys too. |
 | rosa_cluster_name | N/A | Yes | The name of the ROSA cluster |
+
+### `rosa_subnets` example
+
+```yaml
+rosa_subnets:
+  - name: "hub-egress-private-2a"
+    id: "subnet-0de3d4efb7c41b5a3"
+```
 
 ## Dependencies
 
