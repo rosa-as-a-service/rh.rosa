@@ -209,6 +209,12 @@ variable "ocp_version" {
   default     = "{{ rosa_version }}"
 }
 
+variable "rosa_openshift_version" {
+  type        = string
+  description = "Desired version of ROSA."
+  default     = "{{ rosa_version }}"
+}
+
 variable "path" {
   description = "(Optional) The arn path for the account/operator roles as well as their policies."
   type        = string

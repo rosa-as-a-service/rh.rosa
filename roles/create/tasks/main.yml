@@ -37,7 +37,7 @@
       cd "{{ work_dir }}/{{ rosa_cluster_name }}/terraform"
       terraform init
       terraform apply -auto-approve
-  async: 1000
+  async: 3600
   poll: 0
   register: create_cluster
 
