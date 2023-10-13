@@ -49,6 +49,10 @@ resource "rhcs_cluster_rosa_classic" "rosa_sts_cluster" {
   depends_on = [
     resource.time_sleep.wait_for_role_propagation
   ]
+  admin_credentials = {
+    username = var.rosa_admin_username
+    password = var.rosa_admin_password
+  }
 }
 
 resource "rhcs_cluster_wait" "rosa_sts_cluster" {

@@ -215,6 +215,18 @@ variable "rosa_openshift_version" {
   default     = "{{ rosa_version }}"
 }
 
+variable "rosa_admin_username" {
+  type        = string
+  description = "Administrator username to create"
+  default     = "{{ rosa_admin_username }}"
+}
+
+variable "rosa_admin_password" {
+  type        = string
+  description = "Password to set for the above administrator account"
+  default     = "{{ rosa_admin_password }}"
+}
+
 variable "path" {
   description = "(Optional) The arn path for the account/operator roles as well as their policies."
   type        = string
