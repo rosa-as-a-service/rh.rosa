@@ -206,7 +206,7 @@ variable "service_cidr" {
 variable "ocp_version" {
   type        = string
   description = "Desired version of OpenShift for the cluster, for example 'openshift-v4.1.0'. If version is greater than the currently running version, an upgrade will be scheduled."
-  default     = "4.13.10"
+  default     = "{{ rosa_version }}"
 }
 
 variable "path" {
