@@ -58,7 +58,7 @@ resource "rhcs_cluster_wait" "rosa_sts_cluster" {
 
 module "operator_roles" {
   source  = "terraform-redhat/rosa-sts/aws"
-  version = ">=0.0.13"
+  version = "0.0.11"
   create_operator_roles = true
   create_oidc_provider  = true
   create_account_roles  = false
@@ -79,7 +79,7 @@ resource "time_sleep" "wait_for_role_propagation" {
 module "create_account_roles" {
   count   = var.create_account_roles == true ? 1 : 0
   source  = "terraform-redhat/rosa-sts/aws"
-  version = ">=0.0.13"
+  version = "0.0.11"
   create_operator_roles = false
   create_oidc_provider  = false
   create_account_roles  = true
