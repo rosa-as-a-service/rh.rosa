@@ -37,7 +37,7 @@
       cd "{{ work_dir }}/{{ rosa_cluster_name }}/terraform"
       terraform init
       terraform apply -auto-approve
-  async: 3600
+  async: 7200
   poll: 0
   register: create_cluster
 
@@ -46,5 +46,5 @@
     jid: "{{ create_cluster.ansible_job_id }}"
   register: job_result
   until: job_result.finished
-  retries: 120
+  retries: 240
   delay: 30
