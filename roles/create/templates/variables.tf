@@ -63,7 +63,7 @@ variable "rosa_cluster_name" {
 
 variable "rosa_worker_nodes" {
   type    = number
-  default = 2
+  default = {{ rosa_worker_nodes }}
 }
 
 variable "cloud_region" {
@@ -104,7 +104,7 @@ variable "channel_group" {
 variable "compute_machine_type" {
   type        = string
   description = "Identifies the machine type used by the compute nodes, for example r5.xlarge. Use the ocm_machine_types data source to find the possible values."
-  default     = "m5.xlarge"
+  default     = "{{ rosa_worker_instance_type | default('m5.xlarge') }}"
 }
 
 variable "default_mp_labels" {

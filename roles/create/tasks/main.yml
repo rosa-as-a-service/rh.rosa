@@ -38,11 +38,6 @@
     project_path: "{{ work_dir }}/{{ rosa_cluster_name }}/terraform"
     provider_upgrade: true
     state: present
-    variables:
-      token: "{{ rosa_token }}"
-      AWS_ACCESS_KEY_ID: "{{ aws_access_key_id }}"
-      AWS_SECRET_ACCESS_KEY: "{{ aws_secret_access_key }}"
-      AWS_DEFAULT_REGION: "{{ rosa_region }}"
   register: "create"
 
 - name: "Show output"
