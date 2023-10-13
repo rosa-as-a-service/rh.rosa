@@ -6,6 +6,8 @@
     mode: '0755'
 
 - name: Create s3 bucket to store state
+  environment:
+    AWS_DEFAULT_PROFILE: rosa
   amazon.cloud.s3_bucket:
     bucket_name:  "{{ rosa_cluster_name }}-terraform"
     state: present
@@ -29,6 +31,7 @@
     TF_BACKEND_BUCKET: "{{ rosa_cluster_name }}-terraform"
     TF_LOG: debug
     TF_LOG_PATH: "{{ work_dir }}/tf_rosa_deploy.log"
+    AWS_DEFAULT_PROFILE: rosa
   cloud.terraform.terraform:
     complex_vars: false
     force_init: true
