@@ -62,7 +62,7 @@ variable "rosa_cluster_name" {
 }
 
 variable "rosa_worker_nodes" {
-  type    = integer
+  type    = number
   default = 2
 }
 
