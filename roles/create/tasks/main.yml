@@ -34,7 +34,7 @@
     AWS_DEFAULT_PROFILE: rosa
   cloud.terraform.terraform:
     complex_vars: false
-    force_init: false
+    force_init: true
     project_path: "{{ work_dir }}/{{ rosa_cluster_name }}/terraform"
     provider_upgrade: true
     state: present
