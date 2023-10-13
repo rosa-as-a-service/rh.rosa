@@ -1,22 +1,22 @@
 ---
 # tasks file for bootstrap-hub
 - name: configure argocd namespace
-    kubernetes.core.k8s:
+  kubernetes.core.k8s:
     src: "namespace.yml"
     failed_when: false
 
 - name: configure argocd operatorgroup
-    kubernetes.core.k8s:
+  kubernetes.core.k8s:
     src: "operatorgroup.yml"
 
 - name: wait for ArgoCD to start deploying
-    ansible.builtin.pause:
+  ansible.builtin.pause:
     echo: no
     prompt: "Waiting for ArgoCD to start deploying"
     seconds: 10
 
 - name: configure argocd subscription
-    kubernetes.core.k8s:
+  kubernetes.core.k8s:
     src: "subscription.yml"
     register: deploy_argocd
     until: "deploy_argocd.result.status.state == 'AtLatestKnown'"
@@ -24,23 +24,23 @@
     delay: 10
 
 - name: configure argocd cluster role binding
-    kubernetes.core.k8s:
+  kubernetes.core.k8s:
     src: "clusterrolebinding.yml"
 
 - name: configure argocd repo
-    kubernetes.core.k8s:
+  kubernetes.core.k8s:
     template: "repo.yml"
 
-- name: configure argocd route
-    kubernetes.core.k8s:
-    template: "route.yml"
+# - name: configure argocd route
+#   kubernetes.core.k8s:
+#     template: "route.yml"
 
 - name: configure argocd initial application
-    kubernetes.core.k8s:
+  kubernetes.core.k8s:
     template: "application.yml"
 
 # - name: configure ROSA SSO secret
-#     kubernetes.core.k8s:
+#   kubernetes.core.k8s:
 #     resource_definition:
 #         kind: Secret
 #         apiVersion: v1
@@ -55,7 +55,7 @@
 
 # # This namespace is later managed by GitOps, but is required for the initial bootstrapping to complete
 # - name: configure cert-manager project
-#     kubernetes.core.k8s:
+#   kubernetes.core.k8s:
 #     resource_definition:
 #         kind: Project
 #         apiVersion: project.openshift.io/v1
@@ -66,7 +66,7 @@
 #     failed_when: false
 
 # - name: configure cert-manager route53 secret
-#     kubernetes.core.k8s:
+#   kubernetes.core.k8s:
 #     resource_definition:
 #         kind: Secret
 #         apiVersion: v1

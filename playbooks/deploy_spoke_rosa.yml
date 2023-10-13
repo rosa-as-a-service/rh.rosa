@@ -1,0 +1,16 @@
+# This playbook will be used by Ansible Automation Platform to deploy a `spoke` ROSA instance
+- name: Run preflight checks
+  ansible.builtin.import_playbook: rh.rosa.preflight
+
+- name: Deploy a hub ROSA instance
+  hosts: localhost
+  connection: local
+  become: false
+  gather_facts: false
+  tasks:
+    - name: Deploy ROSA
+      ansible.builtin.import_role:
+        name: rh.rosa.create
+
+- name: Bootstrap hub
+  ansible.builtin.import_playbook: rh.rosa.bootstrap_spoke
