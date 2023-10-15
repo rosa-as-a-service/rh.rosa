@@ -1,4 +1,6 @@
 ---
+# tasks file for networking
+---
 - name: Create work directory
   ansible.builtin.file:
     path: "{{ work_dir }}/{{ rosa_cluster_name }}/terraform/"
@@ -14,7 +16,7 @@
 
 - name: Copy terraform module to work_dir
   ansible.builtin.copy:
-    src: files/terraform/
+    src: files/
     dest: "{{ work_dir }}/{{ rosa_cluster_name }}/terraform/"
 
 - name: Copy terraform files to work_dir
@@ -22,9 +24,7 @@
     src: "{{ item }}"
     dest: "{{ work_dir }}/{{ rosa_cluster_name }}/terraform/{{ item }}"
   with_items:
-    - output.tf
     - variables.tf
-    - data.tf
 
 - name: "Create ROSA cluster: {{ rosa_cluster_name }}"
   environment:
