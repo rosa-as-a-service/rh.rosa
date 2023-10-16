@@ -1,5 +1,33 @@
 ---
 # tasks file for bootstrap-hub
+- name: Ensure AWS long lived credentials are configured
+  ansible.builtin.shell:
+    cmd: |
+      export AWS_DEFAULT_PROFILE=rosa
+      aws configure set region ap-southeast-2 --profile rosa
+      aws configure set aws_access_key_id "{{ aws_access_key_id }}" --profile rosa
+      aws configure set aws_secret_access_key "{{ aws_secret_access_key }}" --profile rosa
+      aws configure set profile rosa
+      rosa login --token "{{ rosa_token }}"
+  no_log: true
+  changed_when: false
+
+- name: Get cluster API URL
+  ansible.builtin.shell:
+    cmd: |
+      export AWS_DEFAULT_PROFILE=rosa
+      rosa describe cluster --cluster=hub --output=json | jq -r '.dns.base_domain'
+  register: hub_api_base_domain
+  failed_when: "'Not logged in' in hub_api_base_domain.stderr"
+
+- name: Debug API URL
+  ansible.builtin.debug:
+    msg: "{{ hub_api_base_domain.stdout }}"
+
+- name: Set Hub API URL
+  ansible.builtin.set_fact:
+    boostrap_hub_api_url: "https://api.hub.{{ hub_api_base_domain.stdout }}:6443"
+
 - name: Retrieve authentication token
   community.okd.openshift_auth:
     username: "{{ rosa_admin_username }}"

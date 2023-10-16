@@ -4,7 +4,6 @@
 
 - name: Deploy a hub ROSA instance
   hosts: localhost
-  connection: local
   become: false
   gather_facts: false
   tasks:

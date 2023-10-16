@@ -4,6 +4,13 @@
   connection: local
   become: false
   gather_facts: false
+  pre_tasks:
+    - name: Get cluster API URL
+      ansible.builtin.shell:
+        cmd: |
+          export AWS_DEFAULT_PROFILE=rosa
+          rosa describe cluster --cluster=hub --output=json | jq -r '.dns.base_domain'
+      register: hub_api_base_domain
   roles:
     - rh.rosa.bootstrap_hub
 
