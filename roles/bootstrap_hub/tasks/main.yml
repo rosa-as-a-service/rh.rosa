@@ -1,6 +1,6 @@
 ---
 # tasks file for bootstrap-hub
-- name: Ensure AWS long lived credentials are configured
+- name: Ensure AWS long lived credentials are configured on the bastion
   ansible.builtin.shell:
     cmd: |
       export AWS_DEFAULT_PROFILE=rosa
@@ -16,17 +16,13 @@
   ansible.builtin.shell:
     cmd: |
       export AWS_DEFAULT_PROFILE=rosa
-      rosa describe cluster --cluster=hub --output=json | jq -r '.dns.base_domain'
-  register: hub_api_base_domain
-  failed_when: "'Not logged in' in hub_api_base_domain.stderr"
-
-- name: Debug API URL
-  ansible.builtin.debug:
-    msg: "{{ hub_api_base_domain.stdout }}"
+      rosa describe cluster --cluster={{ rosa_cluster_name }} --output=json | jq -r '.dns.base_domain'
+  register: api_base_domain
+  failed_when: "'Not logged in' in api_base_domain.stderr"
 
 - name: Set Hub API URL
   ansible.builtin.set_fact:
-    boostrap_hub_api_url: "https://api.hub.{{ hub_api_base_domain.stdout }}:6443"
+    boostrap_hub_api_url: "https://api.{{ rosa_cluster_name }}.{{ api_base_domain.stdout }}:6443"
 
 - name: Retrieve authentication token
   community.okd.openshift_auth:
