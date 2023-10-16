@@ -11,12 +11,14 @@
 - name: configure argocd namespace
   kubernetes.core.k8s:
     src: "namespace.yml"
+    host: https://api.hub.575m.p1.openshiftapps.com:6443
     api_key: "{{ openshift_auth_results.openshift_auth.api_key }}"
   failed_when: false
 
 - name: configure argocd operatorgroup
   kubernetes.core.k8s:
     src: "operatorgroup.yml"
+    host: https://api.hub.575m.p1.openshiftapps.com:6443
     api_key: "{{ openshift_auth_results.openshift_auth.api_key }}"
 
 - name: wait for ArgoCD to start deploying
@@ -28,6 +30,7 @@
 - name: configure argocd subscription
   kubernetes.core.k8s:
     src: "subscription.yml"
+    host: https://api.hub.575m.p1.openshiftapps.com:6443
     api_key: "{{ openshift_auth_results.openshift_auth.api_key }}"
   register: deploy_argocd
   until: "deploy_argocd.result.status.state == 'AtLatestKnown'"
@@ -37,11 +40,13 @@
 - name: configure argocd cluster role binding
   kubernetes.core.k8s:
     src: "clusterrolebinding.yml"
+    host: https://api.hub.575m.p1.openshiftapps.com:6443
     api_key: "{{ openshift_auth_results.openshift_auth.api_key }}"
 
 - name: configure argocd repo
   kubernetes.core.k8s:
     template: "repo.yml"
+    host: https://api.hub.575m.p1.openshiftapps.com:6443
     api_key: "{{ openshift_auth_results.openshift_auth.api_key }}"
 
 # - name: configure argocd route
@@ -51,7 +56,9 @@
 - name: configure argocd initial application
   kubernetes.core.k8s:
     template: "application.yml"
+    host: https://api.hub.575m.p1.openshiftapps.com:6443
     api_key: "{{ openshift_auth_results.openshift_auth.api_key }}"
+
 # - name: configure ROSA SSO secret
 #   kubernetes.core.k8s:
 #     resource_definition:
