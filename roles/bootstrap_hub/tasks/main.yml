@@ -1,23 +1,31 @@
 ---
 # tasks file for bootstrap-hub
-- name: Retrieve authentication token
-  community.okd.openshift_auth:
-    username: "{{ rosa_admin_username }}"
-    password: "{{ rosa_admin_password }}"
-    host: https://api.hub.575m.p1.openshiftapps.com:6443
-    validate_certs: false
-  register: openshift_auth_results
+# - name: Retrieve authentication token
+#   community.okd.openshift_auth:
+    # username: "{{ rosa_admin_username }}"
+    # password: "{{ rosa_admin_password }}"
+#     host: https://api.hub.575m.p1.openshiftapps.com:6443
+#     validate_certs: false
+#   register: openshift_auth_results
 
 - name: configure argocd namespace
   kubernetes.core.k8s:
     src: "namespace.yml"
-    api_key: "{{ openshift_auth_results.openshift_auth.api_key }}"
+    username: "{{ rosa_admin_username }}"
+    password: "{{ rosa_admin_password }}"
+    host: https://api.hub.575m.p1.openshiftapps.com:6443
+    validate_certs: false
+#    api_key: "{{ openshift_auth_results.openshift_auth.api_key }}"
   failed_when: false
 
 - name: configure argocd operatorgroup
   kubernetes.core.k8s:
     src: "operatorgroup.yml"
-    api_key: "{{ openshift_auth_results.openshift_auth.api_key }}"
+    username: "{{ rosa_admin_username }}"
+    password: "{{ rosa_admin_password }}"
+    host: https://api.hub.575m.p1.openshiftapps.com:6443
+    validate_certs: false
+#    api_key: "{{ openshift_auth_results.openshift_auth.api_key }}"
 
 - name: wait for ArgoCD to start deploying
   ansible.builtin.pause:
@@ -28,7 +36,11 @@
 - name: configure argocd subscription
   kubernetes.core.k8s:
     src: "subscription.yml"
-    api_key: "{{ openshift_auth_results.openshift_auth.api_key }}"
+    username: "{{ rosa_admin_username }}"
+    password: "{{ rosa_admin_password }}"
+    host: https://api.hub.575m.p1.openshiftapps.com:6443
+    validate_certs: false
+#    api_key: "{{ openshift_auth_results.openshift_auth.api_key }}"
   register: deploy_argocd
   until: "deploy_argocd.result.status.state == 'AtLatestKnown'"
   retries: 10
@@ -37,12 +49,20 @@
 - name: configure argocd cluster role binding
   kubernetes.core.k8s:
     src: "clusterrolebinding.yml"
-    api_key: "{{ openshift_auth_results.openshift_auth.api_key }}"
+    username: "{{ rosa_admin_username }}"
+    password: "{{ rosa_admin_password }}"
+    host: https://api.hub.575m.p1.openshiftapps.com:6443
+    validate_certs: false
+#    api_key: "{{ openshift_auth_results.openshift_auth.api_key }}"
 
 - name: configure argocd repo
   kubernetes.core.k8s:
     template: "repo.yml"
-    api_key: "{{ openshift_auth_results.openshift_auth.api_key }}"
+    username: "{{ rosa_admin_username }}"
+    password: "{{ rosa_admin_password }}"
+    host: https://api.hub.575m.p1.openshiftapps.com:6443
+    validate_certs: false
+#    api_key: "{{ openshift_auth_results.openshift_auth.api_key }}"
 
 # - name: configure argocd route
 #   kubernetes.core.k8s:
@@ -51,7 +71,11 @@
 - name: configure argocd initial application
   kubernetes.core.k8s:
     template: "application.yml"
-    api_key: "{{ openshift_auth_results.openshift_auth.api_key }}"
+    username: "{{ rosa_admin_username }}"
+    password: "{{ rosa_admin_password }}"
+    host: https://api.hub.575m.p1.openshiftapps.com:6443
+    validate_certs: false
+#    api_key: "{{ openshift_auth_results.openshift_auth.api_key }}"
 # - name: configure ROSA SSO secret
 #   kubernetes.core.k8s:
 #     resource_definition:
