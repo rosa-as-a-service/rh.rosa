@@ -17,7 +17,7 @@
 
 - name: configure argocd operatorgroup
   kubernetes.core.k8s:
-    src: "operatorgroup.yml"
+    src: "files/operatorgroup.yml"
     host: https://api.hub.575m.p1.openshiftapps.com:6443
     api_key: "{{ openshift_auth_results.openshift_auth.api_key }}"
 
