@@ -5,6 +5,7 @@
     username: "{{ rosa_admin_username }}"
     password: "{{ rosa_admin_password }}"
     host: https://api.hub.575m.p1.openshiftapps.com:6443
+    validate_certs: false
   register: openshift_auth_results
 
 - name: configure argocd namespace
