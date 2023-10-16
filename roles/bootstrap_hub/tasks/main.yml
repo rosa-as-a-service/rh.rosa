@@ -10,14 +10,14 @@
 
 - name: configure argocd namespace
   kubernetes.core.k8s:
-    src: "namespace.yml"
+    resource_definition: "{{ lookup('ansible.builtin.file', 'namespace.yml') }}"
     host: https://api.hub.575m.p1.openshiftapps.com:6443
     api_key: "{{ openshift_auth_results.openshift_auth.api_key }}"
   failed_when: false
 
 - name: configure argocd operatorgroup
   kubernetes.core.k8s:
-    src: "files/operatorgroup.yml"
+    resource_definition: "{{ lookup('ansible.builtin.file', 'operatorgroup.yml') }}"
     host: https://api.hub.575m.p1.openshiftapps.com:6443
     api_key: "{{ openshift_auth_results.openshift_auth.api_key }}"
 
@@ -29,7 +29,7 @@
 
 - name: configure argocd subscription
   kubernetes.core.k8s:
-    src: "subscription.yml"
+    resource_definition: "{{ lookup('ansible.builtin.file', 'subscription.yml') }}"
     host: https://api.hub.575m.p1.openshiftapps.com:6443
     api_key: "{{ openshift_auth_results.openshift_auth.api_key }}"
   register: deploy_argocd
@@ -39,13 +39,13 @@
 
 - name: configure argocd cluster role binding
   kubernetes.core.k8s:
-    src: "clusterrolebinding.yml"
+    resource_definition: "{{ lookup('ansible.builtin.file', 'clusterrolebinding.yml') }}"
     host: https://api.hub.575m.p1.openshiftapps.com:6443
     api_key: "{{ openshift_auth_results.openshift_auth.api_key }}"
 
 - name: configure argocd repo
   kubernetes.core.k8s:
-    template: "repo.yml"
+    resource_definition: "{{ lookup('ansible.builtin.template', 'repo.yml') }}"
     host: https://api.hub.575m.p1.openshiftapps.com:6443
     api_key: "{{ openshift_auth_results.openshift_auth.api_key }}"
 
@@ -55,7 +55,7 @@
 
 - name: configure argocd initial application
   kubernetes.core.k8s:
-    template: "application.yml"
+    resource_definition: "{{ lookup('ansible.builtin.template', 'application.yml') }}"
     host: https://api.hub.575m.p1.openshiftapps.com:6443
     api_key: "{{ openshift_auth_results.openshift_auth.api_key }}"
 

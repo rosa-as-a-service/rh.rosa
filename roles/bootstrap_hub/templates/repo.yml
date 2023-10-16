@@ -11,7 +11,7 @@ metadata:
 data:
   name: Z2l0b3BzLWJvb3RzdHJhcA==
   project: ZGVmYXVsdA==
-  sshPrivateKey: "{{ ssh_private_key }}"
+  sshPrivateKey: "{{ ssh_private_key | b64encode }}"
   type: Z2l0
   url: Z2l0QGdpdGh1Yi5jb206cm9zYS1hcy1hLXNlcnZpY2UvaHViLXJvc2EtZ2l0b3BzLmdpdA==
 type: Opaque
