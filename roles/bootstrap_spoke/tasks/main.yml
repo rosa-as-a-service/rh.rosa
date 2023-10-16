@@ -12,6 +12,14 @@
   no_log: true
   changed_when: false
 
+- name: Get Hub cluster API URL
+  ansible.builtin.shell:
+    cmd: |
+      export AWS_DEFAULT_PROFILE=rosa
+      rosa describe cluster --cluster=hub --output=json | jq -r '.dns.base_domain'
+  register: hub_api_base_domain
+  failed_when: "'Not logged in' in hub_api_base_domain.stderr"
+
 - name: Get cluster API URL
   ansible.builtin.shell:
     cmd: |
@@ -20,6 +28,48 @@
   register: api_base_domain
   failed_when: "'Not logged in' in api_base_domain.stderr"
 
+- name: Set Hub API URL
+  ansible.builtin.set_fact:
+    hub_api_url: "https://api.hub.{{ hub_api_base_domain.stdout }}:6443"
+
 - name: Set Spoke API URL
   ansible.builtin.set_fact:
-    boostrap_hub_api_url: "https://api.{{ rosa_cluster_name }}.{{ api_base_domain.stdout }}:6443"
+    bootstrap_api_url: "https://api.{{ rosa_cluster_name }}.{{ api_base_domain.stdout }}:6443"
+
+- name: Retrieve Hub authentication token
+  community.okd.openshift_auth:
+    username: "{{ rosa_admin_username }}"
+    password: "{{ rosa_admin_password }}"
+    host: "{{ hub_api_url }}"
+    validate_certs: false
+  register: hub_openshift_auth_results
+
+- name: Retrieve authentication token
+  community.okd.openshift_auth:
+    username: "{{ rosa_admin_username }}"
+    password: "{{ rosa_admin_password }}"
+    host: "{{ bootstrap_api_url }}"
+    validate_certs: false
+  register: openshift_auth_results
+
+- name: configure managed cluster
+  kubernetes.core.k8s:
+    resource_definition: "{{ lookup('ansible.builtin.template', 'managedcluster.yml') }}"
+    host: "{{ hub_api_url }}"
+    api_key: "{{ hub_openshift_auth_results.openshift_auth.api_key }}"
+  failed_when: false
+
+- name: configure spoke secret
+  kubernetes.core.k8s:
+    resource_definition: "{{ lookup('ansible.builtin.template', 'spokesecret.yml') }}"
+    host: "{{ hub_api_url }}"
+    api_key: "{{ hub_openshift_auth_results.openshift_auth.api_key }}"
+  failed_when: false
+
+- name: configure klusterlet addon
+  kubernetes.core.k8s:
+    resource_definition: "{{ lookup('ansible.builtin.template', 'klusterletaddon.yml') }}"
+    host: "{{ hub_api_url }}"
+    api_key: "{{ hub_openshift_auth_results.openshift_auth.api_key }}"
+  failed_when: false
+

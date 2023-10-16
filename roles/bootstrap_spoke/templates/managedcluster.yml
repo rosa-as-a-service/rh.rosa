@@ -1,0 +1,14 @@
+---
+apiVersion: cluster.open-cluster-management.io/v1
+kind: ManagedCluster
+metadata:
+  name: "{{ rosa_cluster_name }}"
+  labels:
+    name: "{{ rosa_cluster_name }}"
+    cloud: auto-detect
+    vendor: auto-detect
+    cluster.open-cluster-management.io/clusterset: default
+    cluster-type: spoke
+  annotations: {}
+spec:
+  hubAcceptsClient: true

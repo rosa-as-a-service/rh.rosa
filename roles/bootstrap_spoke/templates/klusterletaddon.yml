@@ -1,0 +1,26 @@
+---
+apiVersion: agent.open-cluster-management.io/v1
+kind: KlusterletAddonConfig
+metadata:
+  name: "{{ rosa_cluster_name }}"
+  namespace: "{{ rosa_cluster_name }}"
+spec:
+  clusterName: "{{ rosa_cluster_name }}"
+  clusterNamespace: "{{ rosa_cluster_name }}"
+  clusterLabels:
+    name: "{{ rosa_cluster_name }}"
+    cloud: auto-detect
+    vendor: auto-detect
+    cluster.open-cluster-management.io/clusterset: default
+    cluster-type: spoke
+  applicationManager:
+    enabled: true
+    argocdCluster: false
+  policyController:
+    enabled: true
+  searchCollector:
+    enabled: true
+  certPolicyController:
+    enabled: true
+  iamPolicyController:
+    enabled: true
