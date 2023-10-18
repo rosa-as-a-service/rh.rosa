@@ -16,25 +16,25 @@
   ansible.builtin.shell:
     cmd: |
       export AWS_DEFAULT_PROFILE=rosa
-      rosa describe cluster --cluster=hub --output=json | jq -r '.dns.base_domain'
-  register: hub_api_base_domain
-  failed_when: "'Not logged in' in hub_api_base_domain.stderr"
+      rosa describe cluster --cluster=hub --output=json | jq -r '.api.url'
+  register: hub_api_url
+  failed_when: "'Not logged in' in hub_api_url.stderr"
 
 - name: Get cluster API URL
   ansible.builtin.shell:
     cmd: |
       export AWS_DEFAULT_PROFILE=rosa
-      rosa describe cluster --cluster={{ rosa_cluster_name }} --output=json | jq -r '.dns.base_domain'
-  register: api_base_domain
-  failed_when: "'Not logged in' in api_base_domain.stderr"
+      rosa describe cluster --cluster={{ rosa_cluster_name }} --output=json | jq -r '.api.url'
+  register: api_url
+  failed_when: "'Not logged in' in api_url.stderr"
 
 - name: Set Hub API URL
   ansible.builtin.set_fact:
-    hub_api_url: "https://api.hub.{{ hub_api_base_domain.stdout }}:6443"
+    hub_api_url: "{{ hub_api_url.stdout }}"
 
 - name: Set Spoke API URL
   ansible.builtin.set_fact:
-    bootstrap_api_url: "https://api.{{ rosa_cluster_name }}.{{ api_base_domain.stdout }}:6443"
+    bootstrap_api_url: "{{ api_url.stdout }}"
 
 - name: Retrieve Hub authentication token
   community.okd.openshift_auth:

@@ -16,13 +16,13 @@
   ansible.builtin.shell:
     cmd: |
       export AWS_DEFAULT_PROFILE=rosa
-      rosa describe cluster --cluster={{ rosa_cluster_name }} --output=json | jq -r '.dns.base_domain'
-  register: api_base_domain
-  failed_when: "'Not logged in' in api_base_domain.stderr"
+      rosa describe cluster --cluster={{ rosa_cluster_name }} --output=json | jq -r '.api.url'
+  register: api_url
+  failed_when: "'Not logged in' in api_url.stderr"
 
 - name: Set Hub API URL
   ansible.builtin.set_fact:
-    boostrap_hub_api_url: "https://api.{{ rosa_cluster_name }}.{{ api_base_domain.stdout }}:6443"
+    boostrap_hub_api_url: "{{ api_url.stdout }}"
 
 - name: Retrieve authentication token
   community.okd.openshift_auth:
