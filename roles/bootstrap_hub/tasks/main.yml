@@ -176,6 +176,7 @@
         ACK_RESOURCE_TAGS: rosa-as-a-service
         ACK_WATCH_NAMESPACE: ''
         AWS_REGION: ap-southeast-2
+        AWS_ENDPOINT_URL: ''
         ENABLE_LEADER_ELECTION: 'true'
         LEADER_ELECTION_NAMESPACE: ''
 
@@ -210,7 +211,7 @@
         thanos.yaml: |
           type: s3
           config:
-            bucket: "{{ 'rhacm-observability-thanos'  }}"
+            bucket: "{{ 'rhacm-observability-thanos'| b64encode }}"
             endpoint: s3.ap-southeast-2.amazonaws.com
             insecure: true
             access_key: "{{ aws_access_key_id | b64encode}}"
