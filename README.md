@@ -104,7 +104,7 @@ Collections:
 - cloud.terraform
 
 Terraform Providers:
-- terraform-redhat/rhcs: >= 1.4.0-prerelease.2
+- terraform-redhat/rhcs: >= 1.4.0
 - terraform-redhat/rosa-sts/aws: >=0.0.13
 - hashicorp/aws: >= 3.28
 
