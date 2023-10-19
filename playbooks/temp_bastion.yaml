@@ -38,11 +38,11 @@
           terraform apply -auto-approve
       async: 7200
       poll: 0
-      register: create_cluster
+      register: create_temp_bastion
 
     - name: "Show output"
       ansible.builtin.async_status:
-        jid: "{{ create_cluster.ansible_job_id }}"
+        jid: "{{ create_temp_bastion.ansible_job_id }}"
       register: job_result
       until: job_result.finished
       retries: 240
