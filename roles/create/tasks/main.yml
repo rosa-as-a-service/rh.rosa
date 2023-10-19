@@ -22,7 +22,6 @@
     src: "{{ item }}"
     dest: "{{ work_dir }}/{{ rosa_cluster_name }}/terraform/{{ item }}"
   with_items:
-    - output.tf
     - variables.tf
     - data.tf
 

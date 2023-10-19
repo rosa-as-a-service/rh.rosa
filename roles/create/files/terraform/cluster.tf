@@ -17,32 +17,32 @@ resource "rhcs_cluster_rosa_classic" "rosa_sts_cluster" {
   version                     = var.ocp_version
   sts                         = local.sts_roles
   machine_cidr                = data.aws_vpc.tenent_vpc.cidr_block
-  aws_private_link            = var.aws_private_link
-  private                     = var.private
+  aws_private_link            = true
+  private                     = true
   aws_subnet_ids              = length(data.aws_subnet.tenent_subnet_id) >= 3 ? [for subnet_id in data.aws_subnet.tenent_subnet_id : subnet_id.id] : [data.aws_subnet.tenent_subnet_id[keys(data.aws_subnet.tenent_subnet_id)[0]].id]
   availability_zones          = length(data.aws_subnet.tenent_subnet_id) >= 3 ? [for subnet_id in data.aws_subnet.tenent_subnet_id : subnet_id.availability_zone] : [data.aws_subnet.tenent_subnet_id[keys(data.aws_subnet.tenent_subnet_id)[0]].availability_zone]
   multi_az                    = length(data.aws_subnet.tenent_subnet_id) >= 3 ? true : false
-  pod_cidr                    = var.pod_cidr
-  service_cidr                = var.service_cidr
-  channel_group               = var.channel_group
+  pod_cidr                    = "10.128.0.0/14"
+  service_cidr                = "172.30.0.0/16"
+  channel_group               = "stable"
   compute_machine_type        = var.compute_machine_type
-  default_mp_labels           = var.default_mp_labels
-  destroy_timeout             = var.destroy_timeout
-  disable_scp_checks          = var.disable_scp_checks
-  disable_waiting_in_destroy  = var.disable_waiting_in_destroy
-  disable_workload_monitoring = var.disable_workload_monitoring
-  fips                        = var.fips
-  host_prefix                 = var.host_prefix
-  etcd_encryption             = var.etcd_encryption
-  autoscaling_enabled         = var.autoscaling_enabled
-  ec2_metadata_http_tokens    = var.ec2_metadata_http_tokens
-  external_id                 = var.external_id
-  kms_key_arn                 = var.kms_key_arn
-  max_replicas                = var.max_replicas
-  min_replicas                = var.min_replicas
+  default_mp_labels           = {}
+  destroy_timeout             = 60
+  disable_scp_checks          = false
+  disable_waiting_in_destroy  = false
+  disable_workload_monitoring = false
+  fips                        = false
+  host_prefix                 = 23
+  etcd_encryption             = false
+  autoscaling_enabled         = false
+  ec2_metadata_http_tokens    = null
+  external_id                 = null
+  kms_key_arn                 = null
+  max_replicas                = null
+  min_replicas                = null
   replicas                    = var.rosa_worker_nodes
-  proxy                       = var.proxy
-  tags                        = var.tags
+  proxy                       = null
+  tags                        = {}
   properties = {
     rosa_creator_arn = data.aws_caller_identity.current.arn
   }
