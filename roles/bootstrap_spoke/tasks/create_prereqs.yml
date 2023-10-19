@@ -1,0 +1,65 @@
+---
+# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group
+resource "aws_security_group" "allow_tls" {
+  name        = "allow_tls"
+  description = "Allow TLS inbound traffic"
+  vpc_id      = aws_vpc.main.id
+
+  ingress {
+    description      = "TLS from VPC"
+    from_port        = 443
+    to_port          = 443
+    protocol         = "tcp"
+    cidr_blocks      = [aws_vpc.main.cidr_block]
+    ipv6_cidr_blocks = [aws_vpc.main.ipv6_cidr_block]
+  }
+
+  egress {
+    from_port        = 0
+    to_port          = 0
+    protocol         = "-1"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
+  }
+
+  tags = {
+    Name = "allow_tls"
+  }
+}
+
+# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_endpoint
+resource "aws_vpc_endpoint" "ec2" {
+  vpc_id            = aws_vpc.main.id
+  service_name      = "com.amazonaws.us-west-2.ec2"
+  vpc_endpoint_type = "Interface"
+
+  security_group_ids = [
+    aws_security_group.sg1.id,
+  ]
+
+  private_dns_enabled = true
+}
+
+resource "aws_vpc_endpoint_service" "example" {
+  acceptance_required        = false
+  network_load_balancer_arns = [aws_lb.example.arn]
+}
+
+# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_endpoint_connection_accepter
+resource "aws_vpc_endpoint" "example" {
+  provider = aws.alternate
+
+  vpc_id              = aws_vpc.test_alternate.id
+  service_name        = aws_vpc_endpoint_service.test.service_name
+  vpc_endpoint_type   = "Interface"
+  private_dns_enabled = false
+
+  security_group_ids = [
+    aws_security_group.test.id,
+  ]
+}
+
+resource "aws_vpc_endpoint_connection_accepter" "example" {
+  vpc_endpoint_service_id = aws_vpc_endpoint_service.example.id
+  vpc_endpoint_id         = aws_vpc_endpoint.example.id
+}
