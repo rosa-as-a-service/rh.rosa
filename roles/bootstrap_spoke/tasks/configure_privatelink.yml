@@ -1,0 +1,37 @@
+---
+- name: Copy terraform module to work_dir
+  ansible.builtin.copy:
+    src: files/terraform/
+    dest: "{{ work_dir }}/{{ rosa_cluster_name }}/privatelink/terraform/"
+
+- name: Copy terraform files to work_dir
+  ansible.builtin.template:
+    src: "{{ item }}"
+    dest: "{{ work_dir }}/{{ rosa_cluster_name }}/privatelink/terraform/{{ item }}"
+  with_items:
+    - spoke.tfvars.json
+    - privatelink.tf
+    - data.tf
+
+- name: "Create PrivateLink for {{ rosa_cluster_name }}"
+  environment:
+    TF_BACKEND_BUCKET: "{{ rosa_cluster_name }}-terraform"
+    AWS_DEFAULT_PROFILE: rosa
+    TF_LOG: debug
+    TF_LOG_PATH: /var/tmp/hub/tf.log
+  ansible.builtin.shell:
+    cmd: |
+      cd "{{ work_dir }}/{{ rosa_cluster_name }}/privatelink/terraform"
+      terraform init
+      terraform apply -auto-approve
+  async: 7200
+  poll: 0
+  register: create_cluster
+
+- name: "Show output"
+  ansible.builtin.async_status:
+    jid: "{{ create_cluster.ansible_job_id }}"
+  register: job_result
+  until: job_result.finished
+  retries: 240
+  delay: 30
