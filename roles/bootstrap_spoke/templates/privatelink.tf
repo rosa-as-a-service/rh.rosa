@@ -15,14 +15,14 @@
 resource "aws_security_group" "allow_hub" {
   name        = "allow_hub"
   description = "Allow Kubernetes API inbound traffic"
-  vpc_id      = data.aws_vpc.spoke_vpc.id
+  vpc_id      = aws_vpc.spoke_vpc.id
 
   ingress {
     description      = "Kubernetes API from Spoke"
     from_port        = 6443
     to_port          = 6443
     protocol         = "tcp"
-    cidr_blocks      = [data.aws_vpc.hub_vpc.cidr_block]
+    cidr_blocks      = [aws_vpc.hub_vpc.cidr_block]
   }
 
   egress {
@@ -42,14 +42,14 @@ resource "aws_security_group" "allow_hub" {
 resource "aws_security_group" "allow_{{ rosa_cluster_name }}" {
   name        = "allow_{{ rosa_cluster_name }}"
   description = "Allow Kubernetes API inbound traffic"
-  vpc_id      = data.aws_vpc.hub_vpc.id
+  vpc_id      = aws_vpc.hub_vpc.id
 
   ingress {
     description      = "Kubernetes API from {{ rosa_cluster_name }}"
     from_port        = 6443
     to_port          = 6443
     protocol         = "tcp"
-    cidr_blocks      = [data.aws_vpc.spoke_vpc.cidr_block]
+    cidr_blocks      = [aws_vpc.spoke_vpc.cidr_block]
   }
 
   egress {
@@ -67,10 +67,30 @@ resource "aws_security_group" "allow_{{ rosa_cluster_name }}" {
 
 ## Need to associate security groups with the `master` nodes
 
+# need to enable PrivateDNS - unsure how to automate the validation
+resource "aws_vpc_endpoint_service" "{{ rosa_cluster_name }}" {
+  acceptance_required        = false
+  network_load_balancer_arns = [aws_lb.spoke_lb.arn]
+  private_dns_name           = "*.{{ _rosa_base_domain }}"
+}
+
+resource "aws_route53_record" "spoke_base_domain_verification" {
+  zone_id = var.hosted_zone_id
+  name    = {{ rosa_cluster_name }}.private_dns_name_configuration.name
+  value   = {{ rosa_cluster_name }}.private_dns_name_configuration.value
+  type    = "TXT"
+  ttl     = 1800
+}
+
+resource "time_sleep" "wait_for_base_domain_dns_propogration" {
+  depends_on      = [aws_route53_record.spoke_base_domain_verification]
+  create_duration = "180s"
+}
+
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_endpoint
 ## Create a VPC Endpoint in the Spoke to consume 6443/tcp from the Hub via PrivateLink
 resource "aws_vpc_endpoint" "hub" {
-  vpc_id            = aws_vpc.spoke_vpc.id
+  vpc_id            = data.aws_vpc.spoke_vpc.id
   service_name      = "data.aws_vpc_endpoint_service.hub_endpoint_service.name"
   vpc_endpoint_type = "Interface"
 
@@ -92,11 +112,4 @@ resource "aws_vpc_endpoint" "{{ rosa_cluster_name }}" {
   ]
 
   private_dns_enabled = true
-}
-
-# need to enable PrivateDNS - unsure how to automate the validation
-resource "aws_vpc_endpoint_service" "{{ rosa_cluster_name }}" {
-  acceptance_required        = false
-  network_load_balancer_arns = [aws_lb.example.arn]
-  private_dns_name           = "*.{{ _rosa_base_domain }}"
 }
