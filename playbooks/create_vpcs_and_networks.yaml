@@ -4,4 +4,4 @@
   become: false
   gather_facts: false
   roles:
-      - role: rh.rosa.networking
+      - role: rh.rosa.temp_vpc_and_network_setup
