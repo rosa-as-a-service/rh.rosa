@@ -56,6 +56,10 @@ variable "account_role_prefix" {
   default = ""
 }
 
+variable "rosa_openshift_version" {
+  type    = string
+  default = ""
+}
 variable "rosa_cluster_name" {
   type    = string
   default = ""

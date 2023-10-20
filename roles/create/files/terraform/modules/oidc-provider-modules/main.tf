@@ -48,7 +48,7 @@ data "rhcs_rosa_operator_roles" "operator_roles" {
 
 module "operator_roles_and_oidc_provider" {
   source  = "terraform-redhat/rosa-sts/aws"
-  version = "0.0.11"
+  version = "0.0.15"
 
   create_operator_roles = false
   create_oidc_provider  = true

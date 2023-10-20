@@ -15,6 +15,7 @@
 - name: Copy terraform module to work_dir
   ansible.builtin.copy:
     src: files/terraform/
+    remote_src: false
     dest: "{{ work_dir }}/{{ rosa_cluster_name }}/terraform/"
 
 - name: Copy terraform files to work_dir

@@ -42,7 +42,7 @@ resource "rhcs_cluster_rosa_classic" "rosa_sts_cluster" {
   min_replicas                = null
   replicas                    = var.rosa_worker_nodes
   proxy                       = null
-  tags                        = {"ClusterName": var.rosa_cluster_name}
+  tags                        = var.tags
   properties = {
     rosa_creator_arn = data.aws_caller_identity.current.arn
   }
@@ -62,7 +62,7 @@ resource "rhcs_cluster_wait" "rosa_sts_cluster" {
 
 module "operator_roles" {
   source  = "terraform-redhat/rosa-sts/aws"
-  version = "0.0.11"
+  version = "0.0.15"
   create_operator_roles = true
   create_oidc_provider  = true
   create_account_roles  = false
