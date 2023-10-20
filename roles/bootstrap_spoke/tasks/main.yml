@@ -44,13 +44,18 @@
     validate_certs: false
   register: hub_openshift_auth_results
 
-- name: Retrieve authentication token
-  community.okd.openshift_auth:
-    username: "{{ rosa_admin_username }}"
-    password: "{{ rosa_admin_password }}"
-    host: "{{ bootstrap_api_url }}"
-    validate_certs: false
-  register: openshift_auth_results
+# - name: Retrieve authentication token
+#   community.okd.openshift_auth:
+#     username: "{{ rosa_admin_username }}"
+#     password: "{{ rosa_admin_password }}"
+#     host: "{{ bootstrap_api_url }}"
+#     validate_certs: false
+#   register: openshift_auth_results
+- name: Debug spoke API
+  ansible.builtin.set_fact:
+    openshift_auth_results:
+      openshift_auth:
+        api_key: "{{ debug_spoke_key }}"
 
 - name: configure managed cluster
   kubernetes.core.k8s:

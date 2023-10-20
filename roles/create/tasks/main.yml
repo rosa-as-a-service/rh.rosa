@@ -22,7 +22,7 @@
     src: "{{ item }}"
     dest: "{{ work_dir }}/{{ rosa_cluster_name }}/terraform/{{ item }}"
   with_items:
-    - variables.tf
+    - terraform.tfvars.json
     - data.tf
 
 - name: "Create ROSA cluster: {{ rosa_cluster_name }}"
