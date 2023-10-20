@@ -42,7 +42,7 @@ resource "rhcs_cluster_rosa_classic" "rosa_sts_cluster" {
   min_replicas                = null
   replicas                    = var.rosa_worker_nodes
   proxy                       = null
-  tags                        = {}
+  tags                        = {"ClusterName": var.rosa_cluster_name}
   properties = {
     rosa_creator_arn = data.aws_caller_identity.current.arn
   }

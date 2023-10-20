@@ -28,6 +28,18 @@
   register: api_url
   failed_when: "'Not logged in' in api_url.stderr"
 
+- name: Get cluster base domain
+  ansible.builtin.shell:
+    cmd: |
+      export AWS_DEFAULT_PROFILE=rosa
+      rosa describe cluster --cluster={{ rosa_cluster_name }} --output=json | jq -r '.dns.base_domain'
+  register: rosa_cluster_base_domain_result
+  failed_when: "'Not logged in' in rosa_cluster_base_domain_result.stderr"
+
+- name: Set ROSA cluster base domain
+  ansible.builtin.set_fact:
+    _rosa_base_domain: "{{ rosa_cluster_base_domain_result.stdout }}"
+
 - name: Get cluster UUID
   ansible.builtin.shell:
     cmd: |
