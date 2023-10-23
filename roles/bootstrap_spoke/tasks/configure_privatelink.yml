@@ -1,7 +1,7 @@
 ---
-- name: Copy terraform module to work_dir
+- name: Copy terraform components to work_dir
   ansible.builtin.copy:
-    src: terraform/
+    src: files/terraform/
     remote_src: false
     dest: "{{ work_dir }}/{{ rosa_cluster_name }}/privatelink/terraform/"
 

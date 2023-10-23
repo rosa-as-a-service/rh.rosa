@@ -1,4 +1,3 @@
----
 # We need logic to validate the Endpoint Service DNS for PrivateDNS
 ## This logic will need to include creating the TXT DNS record in the
 ## public subnet of the Spoke# (eg <_dns_verification_name>.spoke#.<base_domain>) in Route53
