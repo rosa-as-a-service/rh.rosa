@@ -40,7 +40,20 @@
   ansible.builtin.set_fact:
     _rosa_base_domain: "{{ rosa_cluster_base_domain_result.stdout }}"
 
-- name: Get cluster infra ID
+- name: Get Hub cluster infra ID
+  ansible.builtin.shell:
+    cmd: |
+      export AWS_DEFAULT_PROFILE=rosa
+      rosa describe cluster --cluster=hub --output=json | jq -r '.infra_id'
+  register: rosa_hub_cluster_infra_id_result
+  failed_when: "'Not logged in' in rosa_hub_cluster_infra_id_result.stderr"
+
+- name: Set ROSA Hub cluster infra ID
+  ansible.builtin.set_fact:
+    _rosa_hub_cluster_infra_id: "{{ rosa_hub_cluster_infra_id_result.stdout }}"
+
+
+- name: Get Spoke cluster infra ID
   ansible.builtin.shell:
     cmd: |
       export AWS_DEFAULT_PROFILE=rosa
