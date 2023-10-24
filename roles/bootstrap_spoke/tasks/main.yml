@@ -40,17 +40,17 @@
   ansible.builtin.set_fact:
     _rosa_base_domain: "{{ rosa_cluster_base_domain_result.stdout }}"
 
-- name: Get cluster UUID
+- name: Get cluster infra ID
   ansible.builtin.shell:
     cmd: |
       export AWS_DEFAULT_PROFILE=rosa
-      rosa describe cluster --cluster={{ rosa_cluster_name }} --output=json | jq -r '.dns.base_domain' | cut -d '.' -f1
-  register: rosa_cluster_uuid_result
-  failed_when: "'Not logged in' in rosa_cluster_uuid_result.stderr"
+      rosa describe cluster --cluster={{ rosa_cluster_name }} --output=json | jq -r '.infra_id'
+  register: rosa_cluster_infra_id_result
+  failed_when: "'Not logged in' in rosa_cluster_infra_id_result.stderr"
 
-- name: Set ROSA cluster UUID
+- name: Set ROSA cluster infra ID
   ansible.builtin.set_fact:
-    _rosa_cluster_uuid: "{{ rosa_cluster_uuid_result.stdout }}"
+    _rosa_cluster_infra_id: "{{ rosa_cluster_infra_id_result.stdout }}"
 
 - name: Retrieve Hub authentication token
   community.okd.openshift_auth:

@@ -10,7 +10,7 @@
 
 
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group
-## Modify spoke#-uuid-master securitygroup to allow the Hub subnet to consume 6443/tcp
+## Modify spoke#-infraid-master-sg securitygroup to allow the Hub subnet to consume 6443/tcp
 resource "aws_security_group" "allow_hub" {
   name        = "allow_hub"
   description = "Allow Kubernetes API inbound traffic"
@@ -37,7 +37,7 @@ resource "aws_security_group" "allow_hub" {
   }
 }
 
-## Modify hub#-uuid-master securitygroup to allow the Spoke subnet to consume 6443/tcp
+## Modify hub-infraid-master-sg securitygroup to allow the Spoke subnet to consume 6443/tcp
 resource "aws_security_group" "allow_{{ rosa_cluster_name }}" {
   name        = "allow_{{ rosa_cluster_name }}"
   description = "Allow Kubernetes API inbound traffic"
