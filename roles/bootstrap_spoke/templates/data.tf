@@ -28,6 +28,13 @@ data "aws_vpc_endpoint_service" "hub_endpoint_service" {
   }
 }
 
+data "aws_vpc_security_group" "spoke_master_security_group" {
+  filter {
+    name   = "tag:Name"
+    values = ["{{ _rosa_cluster_infra_id }}-master-sg"]
+  }
+}
+
 data "aws_lbs" "spoke_lb" {
   tags = {
     "Name" = "{{ rosa_cluster_name }}"

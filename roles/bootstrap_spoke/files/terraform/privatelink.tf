@@ -16,21 +16,12 @@ resource "aws_security_group_rule" "allow_hub" {
   description = "Allow Kubernetes API inbound traffic"
   vpc_id      = "${aws_vpc.spoke_vpc.id}"
 
-  ingress {
     description      = "Kubernetes API from Spoke"
-    from_port        = 6443
+    from_port        = any
     to_port          = 6443
     protocol         = "tcp"
+    type             = "Custom TCP"
     cidr_blocks      = ["${aws_vpc.hub_vpc.cidr_block}"]
-  }
-
-  egress {
-    from_port        = 0
-    to_port          = 0
-    protocol         = "-1"
-    cidr_blocks      = ["0.0.0.0/0"]
-    ipv6_cidr_blocks = ["::/0"]
-  }
 
   tags = {
     Name = "allow_hub"
@@ -38,7 +29,7 @@ resource "aws_security_group_rule" "allow_hub" {
 }
 
 ## Modify hub-infraid-master-sg securitygroup to allow the Spoke subnet to consume 6443/tcp
-resource "aws_security_group_rule" "allow_${ var.rosa_cluster_name }" {
+resource "aws_security_group_rule" "allow_$${ var.rosa_cluster_name }" {
   name        = "allow_${ var.rosa_cluster_name }"
   description = "Allow Kubernetes API inbound traffic"
   vpc_id      = "${aws_vpc.hub_vpc.id}""
@@ -67,7 +58,7 @@ resource "aws_security_group_rule" "allow_${ var.rosa_cluster_name }" {
 ## Need to associate security groups with the `master` nodes
 
 # need to enable PrivateDNS - unsure how to automate the validation
-resource "aws_vpc_endpoint_service" "${ var.rosa_cluster_name }" {
+resource "aws_vpc_endpoint_service" "$${ var.rosa_cluster_name }" {
   acceptance_required        = false
   network_load_balancer_arns = ["${aws_lb.spoke_lb.arn}"]
   private_dns_name           = "*.${ var.rosa_base_domain }"
@@ -101,13 +92,13 @@ resource "aws_vpc_endpoint" "hub" {
 }
 
 ## Create a VPC Endpoint in the Hub to consume 6443/tcp from the Spoke# via PrivateLink
-resource "aws_vpc_endpoint" "{{ rosa_cluster_name }}" {
+resource "aws_vpc_endpoint" "$${ var.rosa_cluster_name }" {
   vpc_id            = aws_vpc.hub_vpc.id
   service_name      = "${data.aws_vpc_endpoint_service.spoke_endpoint_service.name}"
   vpc_endpoint_type = "Interface"
 
   security_group_ids = [
-    ${aws_security_group.allow_{{ rosa_cluster_name }}.id},
+    ${aws_security_group.allow_${ var.rosa_cluster_name }.id},
   ]
 
   private_dns_enabled = true
