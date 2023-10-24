@@ -30,21 +30,16 @@ variable "rosa_cluster_name" {
   default = ""
 }
 
-variable "rosa_cluster_name" {
-  type      = string
-  default = ""  
-}
-
 variable "rosa_vpc_name" {
   type      = string
-  default = ""  
+  default = ""
 }
 
 variable "_rosa_cluster_infra_id" {
   type      = string
-  default = ""  
+  default = ""
 }
 variable "_rosa_hub_cluster_infra_id" {
   type      = string
-  default = ""  
+  default = ""
 }
