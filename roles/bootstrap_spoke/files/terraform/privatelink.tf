@@ -51,7 +51,7 @@ resource "aws_route53_record" "spoke_base_domain_verification" {
 }
 
 resource "time_sleep" "wait_for_base_domain_dns_propogration" {
-  depends_on      = ["${aws_route53_record.spoke_base_domain_verification}"]
+  depends_on      = [aws_route53_record.spoke_base_domain_verification]
   create_duration = "180s"
 }
 
