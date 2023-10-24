@@ -44,6 +44,6 @@ data "aws_vpc_security_group" "hub_master_security_group" {
 
 data "aws_lbs" "spoke_lb" {
   tags = {
-    "Name" = var.rosa_cluster_name
+    "Name" = "{{ _rosa_cluster_infra_id }}-int"
   }
 }
