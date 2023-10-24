@@ -11,17 +11,17 @@
 
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group
 ## Modify spoke#-infraid-master-sg securitygroup to allow the Hub subnet to consume 6443/tcp
-resource "aws_security_group" "allow_hub" {
+resource "aws_security_group_rule" "allow_hub" {
   name        = "allow_hub"
   description = "Allow Kubernetes API inbound traffic"
-  vpc_id      = ${aws_vpc.spoke_vpc.id}
+  vpc_id      = "${aws_vpc.spoke_vpc.id}"
 
   ingress {
     description      = "Kubernetes API from Spoke"
     from_port        = 6443
     to_port          = 6443
     protocol         = "tcp"
-    cidr_blocks      = [${aws_vpc.hub_vpc.cidr_block}]
+    cidr_blocks      = ["${aws_vpc.hub_vpc.cidr_block}"]
   }
 
   egress {
@@ -38,17 +38,17 @@ resource "aws_security_group" "allow_hub" {
 }
 
 ## Modify hub-infraid-master-sg securitygroup to allow the Spoke subnet to consume 6443/tcp
-resource "aws_security_group" "allow_{{ rosa_cluster_name }}" {
-  name        = "allow_{{ rosa_cluster_name }}"
+resource "aws_security_group_rule" "allow_${ var.rosa_cluster_name }" {
+  name        = "allow_${ var.rosa_cluster_name }"
   description = "Allow Kubernetes API inbound traffic"
-  vpc_id      = ${aws_vpc.hub_vpc.id}
+  vpc_id      = "${aws_vpc.hub_vpc.id}""
 
   ingress {
-    description      = "Kubernetes API from {{ rosa_cluster_name }}"
+    description      = "Kubernetes API from ${ var.rosa_cluster_name }"
     from_port        = 6443
     to_port          = 6443
     protocol         = "tcp"
-    cidr_blocks      = [${aws_vpc.spoke_vpc.cidr_block}]
+    cidr_blocks      = ["${aws_vpc.spoke_vpc.cidr_block}"]
   }
 
   egress {
@@ -60,23 +60,23 @@ resource "aws_security_group" "allow_{{ rosa_cluster_name }}" {
   }
 
   tags = {
-    Name = "allow_{{ rosa_cluster_name }}"
+    Name = "allow_${ var.rosa_cluster_name }"
   }
 }
 
 ## Need to associate security groups with the `master` nodes
 
 # need to enable PrivateDNS - unsure how to automate the validation
-resource "aws_vpc_endpoint_service" "{{ rosa_cluster_name }}" {
+resource "aws_vpc_endpoint_service" "${ var.rosa_cluster_name }" {
   acceptance_required        = false
-  network_load_balancer_arns = [${aws_lb.spoke_lb.arn}]
-  private_dns_name           = "*.{{ _rosa_base_domain }}"
+  network_load_balancer_arns = ["${aws_lb.spoke_lb.arn}"]
+  private_dns_name           = "*.${ var.rosa_base_domain }"
 }
 
 resource "aws_route53_record" "spoke_base_domain_verification" {
-  zone_id = var.hosted_zone_id
-  name    = ${{{ rosa_cluster_name }}.private_dns_name_configuration.name}
-  value   = ${{{ rosa_cluster_name }}.private_dns_name_configuration.value}
+  zone_id = "${var.hosted_zone_id}"
+  name    = "${var.rosa_cluster_name }.private_dns_name_configuration.name"
+  value   = "${var.rosa_cluster_name }.private_dns_name_configuration.value"
   type    = "TXT"
   ttl     = 1800
 }
