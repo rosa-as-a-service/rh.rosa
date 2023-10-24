@@ -73,7 +73,7 @@ resource "aws_vpc_endpoint" "$${ var.rosa_cluster_name }" {
   service_name      = "${data.aws_vpc_endpoint_service.spoke_endpoint_service.name}"
   vpc_endpoint_type = "Interface"
 
-  security_group_ids = ["${aws_security_group.allow_${ var.rosa_cluster_name }.id}"]
+  security_group_ids = ["${join(".", join("_", "aws_security_group.allow_", var.rosa_cluster_name), "id")}"]
 
   private_dns_enabled = true
 }
