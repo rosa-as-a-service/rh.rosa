@@ -52,7 +52,6 @@
   ansible.builtin.set_fact:
     _rosa_hub_cluster_infra_id: "{{ rosa_hub_cluster_infra_id_result.stdout }}"
 
-
 - name: Get Spoke cluster infra ID
   ansible.builtin.shell:
     cmd: |
