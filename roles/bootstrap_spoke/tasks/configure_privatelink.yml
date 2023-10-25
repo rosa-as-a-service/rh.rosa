@@ -11,6 +11,7 @@
     dest: "{{ work_dir }}/{{ rosa_cluster_name }}/privatelink/terraform/{{ item }}"
   with_items:
     - spoke.tfvars.json
+    - data.tf
 
 - name: "Create PrivateLink for {{ rosa_cluster_name }}"
   environment:
