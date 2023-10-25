@@ -17,7 +17,7 @@
     TF_BACKEND_BUCKET: "{{ rosa_cluster_name }}-terraform"
     AWS_DEFAULT_PROFILE: rosa
     TF_LOG: debug
-    TF_LOG_PATH: /var/tmp/hub/tf.log
+    TF_LOG_PATH: "/var/tmp/{{ rosa_cluster_name }}/privatelink/tf.log"
   ansible.builtin.shell:
     cmd: |
       cd "{{ work_dir }}/{{ rosa_cluster_name }}/privatelink/terraform"
