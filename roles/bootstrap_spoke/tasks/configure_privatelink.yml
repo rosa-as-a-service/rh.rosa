@@ -12,6 +12,7 @@
   with_items:
     - spoke.tfvars.json
     - data.tf
+    - privatelink.tf
 
 - name: "Create PrivateLink for {{ rosa_cluster_name }}"
   environment:
