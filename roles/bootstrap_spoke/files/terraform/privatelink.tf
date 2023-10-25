@@ -13,7 +13,7 @@
 ## Modify spoke#-infraid-master-sg securitygroup to allow the Hub subnet to consume 6443/tcp
 resource "aws_security_group_rule" "allow_hub" {
   description = "Allow Kubernetes API inbound traffic from Hub"
-  security_group_id = "${aws_security_group.spoke_master_security_group.id}"
+  security_group_id = "${aws_security_group.spoke_master_security_group.security_group_id}"
   from_port        = any
   to_port          = 6443
   protocol         = "tcp"
@@ -24,7 +24,7 @@ resource "aws_security_group_rule" "allow_hub" {
 ## Modify hub-infraid-master-sg securitygroup to allow the Spoke subnet to consume 6443/tcp
 resource "aws_security_group_rule" "allow_spoke" {
   description = "Allow Kubernetes API inbound traffic from ${ var.rosa_cluster_name }"
-  security_group_id = "${aws_security_group.hub_master_security_group.id}"
+  security_group_id = "${aws_security_group.hub_master_security_group.security_group_id}"
   from_port        = any
   to_port          = 6443
   protocol         = "tcp"
@@ -59,7 +59,7 @@ resource "time_sleep" "wait_for_base_domain_dns_propogration" {
 ## Create a VPC Endpoint in the Spoke to consume 6443/tcp from the Hub via PrivateLink
 resource "aws_vpc_endpoint" "hub" {
   vpc_id            = "${data.aws_vpc.spoke_vpc.id}"
-  service_name      = "${data.aws_vpc_endpoint_service.hub_endpoint_service.name}"
+  service_name      = "${data.aws_vpc_endpoint_service.hub_endpoint_service.service_name}"
   vpc_endpoint_type = "Interface"
 
   security_group_ids = ["${aws_security_group.allow_hub.id}"]
@@ -70,7 +70,7 @@ resource "aws_vpc_endpoint" "hub" {
 ## Create a VPC Endpoint in the Hub to consume 6443/tcp from the Spoke# via PrivateLink
 resource "aws_vpc_endpoint" "spoke_endpoint" {
   vpc_id            = aws_vpc.hub_vpc.id
-  service_name      = "${data.aws_vpc_endpoint_service.spoke_endpoint_service.name}"
+  service_name      = "${data.aws_vpc_endpoint_service.spoke_endpoint_service.service_name}"
   vpc_endpoint_type = "Interface"
 
   security_group_ids = ["${join(".", join("_", "aws_security_group.allow_", var.rosa_cluster_name), "id")}"]
