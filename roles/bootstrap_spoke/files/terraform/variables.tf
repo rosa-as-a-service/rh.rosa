@@ -48,3 +48,14 @@ variable "rosa_base_domain" {
   type    = string
   default = ""
 }
+
+variable "_rosa_hub_cluster_infra_id" {
+  type    = string
+  default = ""
+}
+
+variable "_rosa_cluster_infra_id" {
+  type    = string
+  default = ""
+  
+}
