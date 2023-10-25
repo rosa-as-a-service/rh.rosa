@@ -1,10 +1,3 @@
-locals {
-  allow_spoke_description = "Allow Kubernetes API inbound traffic from ${var.rosa_cluster_name}"
-  private_dns_name = "*.${var.rosa_base_domain}."
-}
-
-# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group
-## Modify spoke#-infraid-master-sg securitygroup to allow the Hub subnet to consume 6443/tcp
 resource "aws_security_group_rule" "allow_hub" {
   description = "Allow Kubernetes API inbound traffic from Hub"
   security_group_id = "${data.aws_security_group.spoke_master_security_group.id}"
@@ -17,7 +10,7 @@ resource "aws_security_group_rule" "allow_hub" {
 
 ## Modify hub-infraid-master-sg securitygroup to allow the Spoke subnet to consume 6443/tcp
 resource "aws_security_group_rule" "allow_spoke" {
-  description = local.allow_spoke_description
+  description = "Allow Kubernetes API inbound traffic from ${var.rosa_cluster_name}"
   security_group_id = "${data.aws_security_group.hub_master_security_group.id}"
   from_port        = 6443
   to_port          = 6443
@@ -30,7 +23,7 @@ resource "aws_security_group_rule" "allow_spoke" {
 resource "aws_vpc_endpoint_service" "spoke_endpoint_service" {
   acceptance_required        = false
   network_load_balancer_arns = ["${data.aws_lb.spoke_lb.arn}"]
-  private_dns_name           = local.private_dns_name
+  private_dns_name           = "*.${var.rosa_base_domain}."
 }
 
 resource "aws_route53_record" "spoke_base_domain_verification" {
