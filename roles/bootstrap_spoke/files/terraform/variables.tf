@@ -20,10 +20,6 @@ variable "AWS_DEFAULT_REGION" {
   sensitive = true
   default   = ""
 }
-variable "spoke_infra_id" {
-  type    = string
-  default = ""
-}
 
 variable "rosa_cluster_name" {
   type    = string
@@ -47,15 +43,4 @@ variable "rosa_hub_cluster_infra_id" {
 variable "rosa_base_domain" {
   type    = string
   default = ""
-}
-
-variable "_rosa_hub_cluster_infra_id" {
-  type    = string
-  default = ""
-}
-
-variable "_rosa_cluster_infra_id" {
-  type    = string
-  default = ""
-  
 }
