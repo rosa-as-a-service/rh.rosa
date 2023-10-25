@@ -40,9 +40,9 @@ resource "aws_vpc_endpoint_service" "spoke_endpoint_service" {
 }
 
 resource "aws_route53_record" "spoke_base_domain_verification" {
-  zone_id = "${ data.aws_vpc.spoke_vpc.hosted_zone_id }"
-  name    = "${ aws_vpc_endpoint_service.spoke_endpoint_service.private_dns_name_configuration.name }"
-  records   = "${ aws_vpc_endpoint_service.spoke_endpoint_service.private_dns_name_configuration.value }"
+  zone_id = "${ data.aws_route53_zone.spoke_hosted_zone.zone_id }"
+  name    = "${ aws_vpc_endpoint_service.spoke_endpoint_service.private_dns_name_configuration[0].name }"
+  records   = "${ aws_vpc_endpoint_service.spoke_endpoint_service.private_dns_name_configuration[0].value }"
   type    = "TXT"
   ttl     = 1800
 }
