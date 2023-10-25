@@ -17,7 +17,7 @@ resource "aws_security_group_rule" "allow_hub" {
   from_port        = 6443
   to_port          = 6443
   protocol         = "tcp"
-  type             = "Custom TCP"
+  type             = "ingress"
   cidr_blocks      = ["${data.aws_vpc.hub_vpc.cidr_block}"]
 }
 
@@ -28,7 +28,7 @@ resource "aws_security_group_rule" "allow_spoke" {
   from_port        = 6443
   to_port          = 6443
   protocol         = "tcp"
-  type             = "Custom TCP"
+  type             = "ingress"
   cidr_blocks      = ["${data.aws_vpc.spoke_vpc.cidr_block}"]
 
 }
