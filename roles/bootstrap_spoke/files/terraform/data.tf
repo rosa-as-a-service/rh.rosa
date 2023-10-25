@@ -31,19 +31,24 @@ data "aws_vpc_endpoint_service" "hub_endpoint_service" {
 data "aws_security_group" "spoke_master_security_group" {
   filter {
     name   = "tag:Name"
-    values = [ join("-", [ var._rosa_cluster_infra_id, "master-sg"])]
+    values = [ join("-", [ var.rosa_cluster_infra_id, "master-sg"])]
   }
 }
 
 data "aws_security_group" "hub_master_security_group" {
   filter {
     name   = "tag:Name"
-    values = [ join("-", [var._rosa_hub_cluster_infra_id, "master-sg"])]
+    values = [ join("-", [var.rosa_hub_cluster_infra_id, "master-sg"])]
   }
 }
 
 data "aws_lbs" "spoke_lb" {
   tags = {
-    "Name" = "{{ _rosa_cluster_infra_id }}-int"
+    "Name" = "${ var.rosa_cluster_infra_id }-int"
   }
+}
+
+data "aws_route53_zone" "spoke_hosted_zone" {
+  name         = "${var.rosa_base_domain}."
+  private_zone = false
 }

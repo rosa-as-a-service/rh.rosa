@@ -6,40 +6,45 @@
 variable "AWS_ACCESS_KEY_ID" {
   type      = string
   sensitive = true
-  default = ""
+  default   = ""
 }
 
 variable "AWS_SECRET_ACCESS_KEY" {
   type      = string
   sensitive = true
-  default = ""
+  default   = ""
 }
 
 variable "AWS_DEFAULT_REGION" {
   type      = string
   sensitive = true
-  default = ""
+  default   = ""
 }
 variable "spoke_infra_id" {
-  type      = string
+  type    = string
   default = ""
 }
 
 variable "rosa_cluster_name" {
-  type      = string
+  type    = string
   default = ""
 }
 
 variable "rosa_vpc_name" {
-  type      = string
+  type    = string
   default = ""
 }
 
 variable "_rosa_cluster_infra_id" {
-  type      = string
+  type    = string
   default = ""
 }
 variable "_rosa_hub_cluster_infra_id" {
-  type      = string
+  type    = string
+  default = ""
+}
+
+variable "_rosa_base_domain" {
+  type    = string
   default = ""
 }
