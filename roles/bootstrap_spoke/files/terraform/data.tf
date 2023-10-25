@@ -42,7 +42,7 @@ data "aws_security_group" "hub_master_security_group" {
   }
 }
 
-data "aws_lbs" "spoke_lb" {
+data "aws_lb" "spoke_lb" {
   tags = {
     "Name" = "${ var.rosa_cluster_infra_id }-int"
   }
