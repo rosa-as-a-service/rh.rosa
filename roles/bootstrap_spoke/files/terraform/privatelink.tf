@@ -1,13 +1,7 @@
-# We need logic to validate the Endpoint Service DNS for PrivateDNS
-## This logic will need to include creating the TXT DNS record in the
-## public subnet of the Spoke# (eg <_dns_verification_name>.spoke#.<base_domain>) in Route53
-##
-## Once that is complete, then we can enable PrivateDNS on the Endpoints (automatically done below)
-# Using this to modify the existing Endpoint Service might do all the heavy lifting for us
-
-# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_endpoint_service
-## Modify the Spoke's Endpoint Service
-
+locals {
+  allow_spoke_description = "Allow Kubernetes API inbound traffic from ${var.rosa_cluster_name}"
+  private_dns_name = "*.${var.rosa_base_domain}."
+}
 
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group
 ## Modify spoke#-infraid-master-sg securitygroup to allow the Hub subnet to consume 6443/tcp
@@ -23,7 +17,7 @@ resource "aws_security_group_rule" "allow_hub" {
 
 ## Modify hub-infraid-master-sg securitygroup to allow the Spoke subnet to consume 6443/tcp
 resource "aws_security_group_rule" "allow_spoke" {
-  description = "Allow Kubernetes API inbound traffic from ${var.rosa_cluster_name}"
+  description = local.allow_spoke_description
   security_group_id = "${data.aws_security_group.hub_master_security_group.id}"
   from_port        = 6443
   to_port          = 6443
@@ -36,13 +30,13 @@ resource "aws_security_group_rule" "allow_spoke" {
 resource "aws_vpc_endpoint_service" "spoke_endpoint_service" {
   acceptance_required        = false
   network_load_balancer_arns = ["${data.aws_lb.spoke_lb.arn}"]
-  private_dns_name           = "*.${var.rosa_base_domain}."
+  private_dns_name           = local.private_dns_name
 }
 
 resource "aws_route53_record" "spoke_base_domain_verification" {
   zone_id = "${data.aws_route53_zone.spoke_hosted_zone.zone_id}"
   name    = "${aws_vpc_endpoint_service.spoke_endpoint_service.private_dns_name_configuration[0].name}"
-  records   = "${aws_vpc_endpoint_service.spoke_endpoint_service.private_dns_name_configuration[0].value}"
+  records   = ["${aws_vpc_endpoint_service.spoke_endpoint_service.private_dns_name_configuration[0].value}"]
   type    = "TXT"
   ttl     = 1800
 }
