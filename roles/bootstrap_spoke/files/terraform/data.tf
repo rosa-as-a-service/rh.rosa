@@ -16,15 +16,15 @@ data "aws_vpc_endpoint_service" "spoke_endpoint_service" {
 
 data "aws_vpc" "hub_vpc" {
   filter {
-    name   = "tag:cluster-name"
-    values = ["hub"]
+    name   = "tag:Name"
+    values = ["hub-egress"]
   }
 }
 
 data "aws_vpc_endpoint_service" "hub_endpoint_service" {
   filter {
-    name   = "tag:cluster-name"
-    values = ["hub"]
+    name   = "tag:Name"
+    values = ["hub-egress"]
   }
 }
 
