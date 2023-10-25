@@ -13,7 +13,7 @@
 ## Modify spoke#-infraid-master-sg securitygroup to allow the Hub subnet to consume 6443/tcp
 resource "aws_security_group_rule" "allow_hub" {
   description = "Allow Kubernetes API inbound traffic from Hub"
-  security_group_id = "${data.aws_security_group.spoke_master_security_group.security_group_id}"
+  security_group_id = "${data.aws_security_group.spoke_master_security_group.id}"
   from_port        = 6443
   to_port          = 6443
   protocol         = "tcp"
@@ -24,7 +24,7 @@ resource "aws_security_group_rule" "allow_hub" {
 ## Modify hub-infraid-master-sg securitygroup to allow the Spoke subnet to consume 6443/tcp
 resource "aws_security_group_rule" "allow_spoke" {
   description = "Allow Kubernetes API inbound traffic from ${ var.rosa_cluster_name }"
-  security_group_id = "${data.aws_security_group.hub_master_security_group.security_group_id}"
+  security_group_id = "${data.aws_security_group.hub_master_security_group.id}"
   from_port        = 6443
   to_port          = 6443
   protocol         = "tcp"

@@ -27,7 +27,7 @@
   poll: 0
   register: create_cluster
 
-- name: "Show output"
+- name: "Wait for PrivateLink to be created"
   ansible.builtin.async_status:
     jid: "{{ create_cluster.ansible_job_id }}"
   register: job_result

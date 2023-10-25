@@ -31,14 +31,14 @@ data "aws_vpc_endpoint_service" "hub_endpoint_service" {
 data "aws_security_group" "spoke_master_security_group" {
   filter {
     name   = "tag:Name"
-    values = [ join("-", [ var.rosa_cluster_infra_id, "master-sg"])]
+    values = [ "${var.rosa_cluster_infra_id}-master-sg}"]
   }
 }
 
 data "aws_security_group" "hub_master_security_group" {
   filter {
     name   = "tag:Name"
-    values = [ join("-", [var.rosa_hub_cluster_infra_id, "master-sg"])]
+    values = [ "${var.rosa_hub_cluster_infra_id}-master-sg}"]
   }
 }
 
