@@ -3,14 +3,14 @@ data "aws_caller_identity" "current" {}
 data "aws_vpc" "spoke_vpc" {
   filter {
     name   = "tag:cluster-name"
-    values = [ var.rosa_vpc_name ]
+    values = [ "${var.rosa_cluster_name}" ]
   }
 }
 
 data "aws_vpc_endpoint_service" "spoke_endpoint_service" {
   filter {
-    name   = "tag:cluster-name"
-    values = [ var.rosa_cluster_name ]
+    name   = "tag:hive.openshift.io/private-link-access-for"
+    values = [ "${var.rosa_cluster_infra_id}" ]
   }
 }
 
@@ -23,8 +23,8 @@ data "aws_vpc" "hub_vpc" {
 
 data "aws_vpc_endpoint_service" "hub_endpoint_service" {
   filter {
-    name   = "tag:Name"
-    values = ["hub-egress"]
+    name   = "tag:hive.openshift.io/private-link-access-for"
+    values = ["${var.rosa_hub_cluster_infra_id}"]
   }
 }
 
