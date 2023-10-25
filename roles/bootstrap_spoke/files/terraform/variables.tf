@@ -35,16 +35,16 @@ variable "rosa_vpc_name" {
   default = ""
 }
 
-variable "_rosa_cluster_infra_id" {
+variable "rosa_cluster_infra_id" {
   type    = string
   default = ""
 }
-variable "_rosa_hub_cluster_infra_id" {
+variable "rosa_hub_cluster_infra_id" {
   type    = string
   default = ""
 }
 
-variable "_rosa_base_domain" {
+variable "rosa_base_domain" {
   type    = string
   default = ""
 }

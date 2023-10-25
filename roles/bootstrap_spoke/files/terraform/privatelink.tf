@@ -38,14 +38,14 @@ resource "aws_security_group_rule" "allow_spoke" {
 # need to enable PrivateDNS - unsure how to automate the validation
 resource "aws_vpc_endpoint_service" "spoke_endpoint_service" {
   acceptance_required        = false
-  network_load_balancer_arns = ["${data.aws_lb.spoke_lb.arn}"]
+  network_load_balancer_arns = ["${ data.aws_lb.spoke_lb.arn }"]
   private_dns_name           = "*.${ var.rosa_base_domain }."
 }
 
 resource "aws_route53_record" "spoke_base_domain_verification" {
-  zone_id = "${data.aws_vpc.spoke_vpc.hosted_zone_id}"
-  name    = "${var.rosa_cluster_name }.private_dns_name_configuration.name"
-  records   = "${var.rosa_cluster_name }.private_dns_name_configuration.value"
+  zone_id = "${ data.aws_vpc.spoke_vpc.hosted_zone_id }"
+  name    = "${ aws_vpc_endpoint_service.spoke_endpoint_service.private_dns_name_configuration.name }"
+  records   = "${ aws_vpc_endpoint_service.spoke_endpoint_service.private_dns_name_configuration.value }"
   type    = "TXT"
   ttl     = 1800
 }
