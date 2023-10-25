@@ -50,5 +50,4 @@ data "aws_lb" "spoke_lb" {
 
 data "aws_route53_zone" "spoke_hosted_zone" {
   name         = "${var.rosa_base_domain}."
-  private_zone = false
 }
