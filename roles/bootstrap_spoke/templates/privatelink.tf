@@ -94,7 +94,7 @@ resource "aws_vpc_endpoint" "hub" {
   service_name      = "${data.aws_vpc_endpoint_service.hub_endpoint_service.service_name}"
   vpc_endpoint_type = "Interface"
   security_group_ids = ["${data.aws_security_group.spoke_master_security_group.id}"]
-  subnet_ids          = ["${data.aws_subnet.hub_public_subnet.id}"]
+  subnet_ids          = ["{{ rosa_hub_public_subnet_id }}"]
   private_dns_enabled = true
 }
 
