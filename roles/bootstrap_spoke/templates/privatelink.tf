@@ -21,21 +21,56 @@ resource "aws_security_group_rule" "allow_spoke" {
 }
 
 resource "aws_lb" "spoke_lb" {
-  name                = "{{ rosa_cluster_name }}-api"
-  internal            = true
-  load_balancer_type  = "network"
-  subnets             = [for subnet in data.aws_subnet.spoke_subnet : subnet.id]
-
+  name                       = "{{ rosa_cluster_name }}-api"
+  internal                   = true
+  load_balancer_type         = "network"
+  subnets                    = [for subnet in data.aws_subnet.spoke_subnet : subnet.id]
   enable_deletion_protection = false
-
   tags = {
     cluster-name = "{{ rosa_cluster_name }}"
   }
 }
 
+resource "aws_lb_target_group" "spoke_api_target_group" {
+  name        = "{{ rosa_cluster_name }}-api"
+  port        = 6443
+  protocol    = "TCP"
+  target_type = "ip"
+  vpc_id      = data.aws_vpc.spoke_vpc.id
+}
+
+resource "aws_lb_target_group_attachment" "spoke_api_target_group_attach_1" {
+  target_group_arn  = aws_lb_target_group.spoke_api_target_group.arn
+  target_id         = data.aws_network_interface.master_0.private_ip
+  port              = 6443
+}
+
+resource "aws_lb_target_group_attachment" "spoke_api_target_group_attach_2" {
+  target_group_arn  = aws_lb_target_group.spoke_api_target_group.arn
+  target_id         = data.aws_network_interface.master_1.private_ip
+  port              = 6443
+}
+
+resource "aws_lb_target_group_attachment" "spoke_api_target_group_attach_3" {
+  target_group_arn  = aws_lb_target_group.spoke_api_target_group.arn
+  target_id         = data.aws_network_interface.master_2.private_ip
+  port              = 6443
+}
+
+resource "aws_lb_listener" "spoke_api_listener" {
+  load_balancer_arn = aws_lb.spoke_lb.arn
+  port              = "6443"
+  protocol          = "TCP"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.spoke_api_target_group.arn
+  }
+}
+
 resource "aws_vpc_endpoint_service" "spoke_endpoint_service" {
   acceptance_required        = false
-  network_load_balancer_arns = ["${data.aws_lb.spoke_lb.arn}"]
+  network_load_balancer_arns = ["${aws_lb.spoke_lb.arn}"]
   private_dns_name           = "*.{{ rosa_cluster_name }}.{{ _rosa_base_domain }}"
 }
 
@@ -67,7 +102,7 @@ resource "aws_vpc_endpoint" "hub" {
 ## Create a VPC Endpoint in the Hub to consume 6443/tcp from the Spoke via PrivateLink
 resource "aws_vpc_endpoint" "spoke_endpoint" {
   vpc_id            = "${data.aws_vpc.hub_vpc.id}"
-  service_name      = "${data.aws_vpc_endpoint_service.spoke_endpoint_service.service_name}"
+  service_name      = "${aws_vpc_endpoint_service.spoke_endpoint_service.service_name}"
   vpc_endpoint_type = "Interface"
 
   security_group_ids = ["${data.aws_security_group.hub_master_security_group.id}"]
