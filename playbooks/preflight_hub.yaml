@@ -7,11 +7,11 @@
     - name: Ensure AWS long lived credentials are configured
       ansible.builtin.shell:
         cmd: |
-          export AWS_DEFAULT_PROFILE=rosa
-          aws configure set region ap-southeast-2 --profile rosa
-          aws configure set aws_access_key_id "{{ aws_access_key_id }}" --profile rosa
-          aws configure set aws_secret_access_key "{{ aws_secret_access_key }}" --profile rosa
-          aws configure set profile rosa
+          export AWS_DEFAULT_PROFILE=rosa_hub
+          aws configure set region ap-southeast-2 --profile rosa_hub
+          aws configure set aws_access_key_id "{{ aws_hub_access_key_id }}" --profile rosa_hub
+          aws configure set aws_secret_access_key "{{ aws_hub_secret_access_key }}" --profile rosa_hub
+          aws configure set profile rosa_hub
           rosa login --token "{{ rosa_token }}"
       no_log: true
       changed_when: false
@@ -19,8 +19,8 @@
     - name: Run network validation tests
       ansible.builtin.shell:
         cmd: |
-          export AWS_DEFAULT_PROFILE=rosa
-          rosa verify network --watch --status-only --subnet-ids "{{ rosa_subnets | map(attribute='id') | join(',') }}" --region="ap-southeast-2" --role-arn="arn:aws:iam::{{ rosa_aws_account_id }}:role/{{ rosa_aws_role_name | default(rosa_cluster_name + "-Installer-Role") }}"
+          export AWS_DEFAULT_PROFILE=rosa_hub
+          rosa verify network --watch --status-only --subnet-ids "{{ rosa_subnets | map(attribute='id') | join(',') }}" --region="ap-southeast-2" --role-arn="arn:aws:iam::{{ rosa_hub_aws_account_id }}:role/{{ rosa_aws_role_name | default(rosa_cluster_name + "-Installer-Role") }}"
       register: egress_validation
       changed_when: false
 

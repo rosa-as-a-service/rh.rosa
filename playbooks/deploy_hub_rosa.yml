@@ -3,7 +3,7 @@
   vars:
     rosa_cluster_name: "{{ rosa_hub_cluster_name }}"
     rosa_subnets: "{{ rosa_hub_subnets }}"
-  ansible.builtin.import_playbook: rh.rosa.preflight
+  ansible.builtin.import_playbook: rh.rosa.preflight_hub
 
 - name: Deploy a hub ROSA instance
   hosts: localhost
@@ -11,6 +11,7 @@
   gather_facts: false
   vars:
     rosa_aws_account_id: "{{ rosa_hub_aws_account_id }}"
+    rosa_aws_secret_access_key: "{{ rosa_hub_aws_secret_access_key }}"
     rosa_vpc_name: "{{ rosa_hub_vpc_name }}"
     rosa_vpc_id: "{{ rosa_hub_vpc_id }}"
     rosa_cluster_name: "{{ rosa_hub_cluster_name }}"
