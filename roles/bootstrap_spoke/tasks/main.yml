@@ -96,24 +96,24 @@
   ansible.builtin.set_fact:
     bootstrap_api_url: "{{ api_url.stdout }}"
 
-# - name: configure managed cluster
-#   kubernetes.core.k8s:
-#     resource_definition: "{{ lookup('ansible.builtin.template', 'managedcluster.yml') }}"
-#     host: "{{ hub_api_url }}"
-#     api_key: "{{ hub_openshift_auth_results.openshift_auth.api_key }}"
-#     validate_certs: false
+- name: configure managed cluster
+  kubernetes.core.k8s:
+    resource_definition: "{{ lookup('ansible.builtin.template', 'managedcluster.yml') }}"
+    host: "{{ hub_api_url }}"
+    api_key: "{{ hub_openshift_auth_results.openshift_auth.api_key }}"
+    validate_certs: false
 
-# - name: configure spoke secret
-#   kubernetes.core.k8s:
-#     resource_definition: "{{ lookup('ansible.builtin.template', 'spokesecret.yml') }}"
-#     host: "{{ hub_api_url }}"
-#     api_key: "{{ hub_openshift_auth_results.openshift_auth.api_key }}"
-#     validate_certs: false
+- name: configure spoke secret
+  kubernetes.core.k8s:
+    resource_definition: "{{ lookup('ansible.builtin.template', 'spokesecret.yml') }}"
+    host: "{{ hub_api_url }}"
+    api_key: "{{ hub_openshift_auth_results.openshift_auth.api_key }}"
+    validate_certs: false
 
-# - name: configure klusterlet addon
-#   kubernetes.core.k8s:
-#     resource_definition: "{{ lookup('ansible.builtin.template', 'klusterletaddon.yml') }}"
-#     host: "{{ hub_api_url }}"
-#     api_key: "{{ hub_openshift_auth_results.openshift_auth.api_key }}"
-#     validate_certs: false
+- name: configure klusterlet addon
+  kubernetes.core.k8s:
+    resource_definition: "{{ lookup('ansible.builtin.template', 'klusterletaddon.yml') }}"
+    host: "{{ hub_api_url }}"
+    api_key: "{{ hub_openshift_auth_results.openshift_auth.api_key }}"
+    validate_certs: false
 
