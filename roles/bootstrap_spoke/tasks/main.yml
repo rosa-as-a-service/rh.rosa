@@ -18,7 +18,11 @@
       export AWS_DEFAULT_PROFILE=rosa_spoke
       rosa describe cluster --cluster=hub --output=json | jq -r '.api.url'
   register: hub_api_url
-  failed_when: "'Not logged in' in hub_api_url.stderr"
+  failed_when: "'Not logged in' in hub_api_url.stderr or 'Failed to find credentials' in hub_api_url.stderr"
+
+- name: Set Hub API URL
+  ansible.builtin.set_fact:
+    hub_api_url: "{{ hub_api_url.stdout }}"
 
 - name: Get cluster API URL
   ansible.builtin.shell:
@@ -26,7 +30,11 @@
       export AWS_DEFAULT_PROFILE=rosa_spoke
       rosa describe cluster --cluster={{ rosa_cluster_name }} --output=json | jq -r '.api.url'
   register: api_url
-  failed_when: "'Not logged in' in api_url.stderr"
+  failed_when: "'Not logged in' in api_url.stderr or 'Failed to find credentials' in api_url.stderr"
+
+- name: Set Spoke API URL
+  ansible.builtin.set_fact:
+    bootstrap_api_url: "{{ api_url.stdout }}"
 
 - name: Get cluster base domain
   ansible.builtin.shell:
@@ -34,7 +42,7 @@
       export AWS_DEFAULT_PROFILE=rosa_spoke
       rosa describe cluster --cluster={{ rosa_cluster_name }} --output=json | jq -r '.dns.base_domain'
   register: rosa_cluster_base_domain_result
-  failed_when: "'Not logged in' in rosa_cluster_base_domain_result.stderr"
+  failed_when: "'Not logged in' in rosa_cluster_base_domain_result.stderr or 'Failed to find credentials' in rosa_cluster_base_domain_result.stderr"
 
 - name: Set ROSA cluster base domain
   ansible.builtin.set_fact:
@@ -46,7 +54,7 @@
       export AWS_DEFAULT_PROFILE=rosa_spoke
       rosa describe cluster --cluster=hub --output=json | jq -r '.infra_id'
   register: rosa_hub_cluster_infra_id_result
-  failed_when: "'Not logged in' in rosa_hub_cluster_infra_id_result.stderr"
+  failed_when: "'Not logged in' in rosa_hub_cluster_infra_id_result.stderr or 'Failed to find credentials' in rosa_hub_cluster_infra_id_result.stderr"
 
 - name: Set ROSA Hub cluster infra ID
   ansible.builtin.set_fact:
@@ -58,7 +66,7 @@
       export AWS_DEFAULT_PROFILE=rosa_spoke
       rosa describe cluster --cluster={{ rosa_cluster_name }} --output=json | jq -r '.infra_id'
   register: rosa_cluster_infra_id_result
-  failed_when: "'Not logged in' in rosa_cluster_infra_id_result.stderr"
+  failed_when: "'Not logged in' in rosa_cluster_infra_id_result.stderr or 'Failed to find credentials' in rosa_cluster_infra_id_result.stderr"
 
 - name: Set ROSA cluster infra ID
   ansible.builtin.set_fact:
@@ -68,7 +76,7 @@
   community.okd.openshift_auth:
     username: "{{ rosa_admin_username }}"
     password: "{{ rosa_admin_password }}"
-    host: "{{ hub_api_url.stdout }}"
+    host: "{{ hub_api_url }}"
     validate_certs: false
   register: hub_openshift_auth_results
 
@@ -76,7 +84,7 @@
 #   community.okd.openshift_auth:
 #     username: "{{ rosa_admin_username }}"
 #     password: "{{ rosa_admin_password }}"
-#     host: "{{ bootstrap_api_url }}"
+#     host: "{{ api_url }}"
 #     validate_certs: false
 #   register: openshift_auth_results
 - name: Debug spoke API
@@ -87,14 +95,6 @@
 
 - name: Configure PrivateLink
   ansible.builtin.import_tasks: configure_privatelink.yml
-
-- name: Set Hub API URL
-  ansible.builtin.set_fact:
-    hub_api_url: "{{ hub_api_url.stdout }}"
-
-- name: Set Spoke API URL
-  ansible.builtin.set_fact:
-    bootstrap_api_url: "{{ api_url.stdout }}"
 
 - name: configure managed cluster
   kubernetes.core.k8s:

@@ -77,8 +77,8 @@ This playbook deletes all resources created by the **rh.rosa.create** role
 | --- | --- | --- | --- |
 | aws_access_key_id | N/A | Yes | The AWS Access Key with sufficient permissions to create a ROSSA cluster |
 | aws_secret_access_key | N/A | Yes | The AWS Access Key with sufficient permissions to create a ROSSA cluster |
-| rosa_aws_account_id | N/A | Yes | The AWS Account ID |
-| rosa_aws_role_name | "{{ rosa_cluster_name }}-Installer-Role" | Yes | The name of the role used for the preflight validations |
+| aws_account_id | N/A | Yes | The AWS Account ID |
+| aws_role_name | "{{ rosa_cluster_name }}-Installer-Role" | Yes | The name of the role used for the preflight validations |
 | rosa_worker_nodes | 2 | Yes | The number of initial work nodes |
 | rosa_worker_instance_type | m5.xlarge | Yes | The EC2 instance type to use for the ROSA worker nodes |
 | rosa_version | "4.13.10" | Yes | The version of ROSA to deploy |

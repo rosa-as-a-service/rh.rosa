@@ -1,8 +1,8 @@
 data "aws_caller_identity" "current" {}
 
 data "rhcs_rosa_operator_roles" "operator_roles" {
-  operator_role_prefix = var.operator_role_prefix
-  account_role_prefix  = var.account_role_prefix
+  operator_role_prefix = "{{ rosa_cluster_name }}"
+  account_role_prefix  = "{{ rosa_cluster_name }}"
 }
 
 data "rhcs_policies" "all_policies" {}
