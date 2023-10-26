@@ -10,21 +10,21 @@ data "aws_vpc" "hub_vpc" {
 data "aws_network_interface" "master_0" {
   filter {
     name = "tag:Name"
-    values = ["{{ _rosa_cluster_infra_id }}-master-0"]
+    values = ["{{ _rosa_hub_cluster_infra_id }}-master-0"]
   }
 }
 
 data "aws_network_interface" "master_1" {
   filter {
     name = "tag:Name"
-    values = ["{{ _rosa_cluster_infra_id }}-master-1"]
+    values = ["{{ _rosa_hub_cluster_infra_id }}-master-1"]
   }
 }
 
 data "aws_network_interface" "master_2" {
   filter {
     name = "tag:Name"
-    values = ["{{ _rosa_cluster_infra_id }}-master-2"]
+    values = ["{{ _rosa_hub_cluster_infra_id }}-master-2"]
   }
 }
 
@@ -45,5 +45,5 @@ data "aws_route53_zone" "hub_hosted_zone" {
 }
 
 data "aws_lb_target_group" "hub_api_target_group"{
-  name = "{{ _rosa_cluster_infra_id }}-aint"
+  name = "{{ _rosa_hub_cluster_infra_id }}-aint"
 }
