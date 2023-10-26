@@ -28,18 +28,6 @@ data "aws_network_interface" "master_2" {
   }
 }
 
-data "aws_subnets" "hub_subnets" {
-  filter {
-    name   = "tag:cluster-name"
-    values = ["{{ rosa_cluster_name }}"]
-  }
-}
-
-data "aws_subnet" "hub_subnet" {
-  for_each = toset(data.aws_subnets.hub_subnets.ids)
-  id = each.value
-}
-
 data "aws_route53_zone" "hub_hosted_zone" {
   name = "{{ _rosa_base_domain }}."
 }

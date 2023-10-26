@@ -2,7 +2,7 @@ resource "aws_lb" "hub_lb" {
   name                       = "{{ rosa_cluster_name }}-api"
   internal                   = true
   load_balancer_type         = "network"
-  subnets                    = [for subnet in data.aws_subnet.hub_subnet : subnet.id]
+  subnets                    = ["{{ rosa_hub_private_subnet_id }}"]
   enable_deletion_protection = false
   tags = {
     cluster-name = "{{ rosa_cluster_name }}"
