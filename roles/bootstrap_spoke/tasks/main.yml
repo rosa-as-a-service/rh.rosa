@@ -3,11 +3,11 @@
 - name: Ensure AWS long lived credentials are configured on the bastion
   ansible.builtin.shell:
     cmd: |
-      export AWS_DEFAULT_PROFILE=rosa
-      aws configure set region ap-southeast-2 --profile rosa
-      aws configure set aws_access_key_id "{{ aws_access_key_id }}" --profile rosa
-      aws configure set aws_secret_access_key "{{ aws_secret_access_key }}" --profile rosa
-      aws configure set profile rosa
+      export AWS_DEFAULT_PROFILE=rosa_spoke
+      aws configure set region ap-southeast-2 --profile rosa_spoke
+      aws configure set aws_access_key_id "{{ aws_access_key_id }}" --profile rosa_spoke
+      aws configure set aws_secret_access_key "{{ aws_secret_access_key }}" --profile rosa_spoke
+      aws configure set profile rosa_spoke
       rosa login --token "{{ rosa_token }}"
   no_log: true
   changed_when: false
@@ -15,7 +15,7 @@
 - name: Get Hub cluster API URL
   ansible.builtin.shell:
     cmd: |
-      export AWS_DEFAULT_PROFILE=rosa
+      export AWS_DEFAULT_PROFILE=rosa_spoke
       rosa describe cluster --cluster=hub --output=json | jq -r '.api.url'
   register: hub_api_url
   failed_when: "'Not logged in' in hub_api_url.stderr"
@@ -23,7 +23,7 @@
 - name: Get cluster API URL
   ansible.builtin.shell:
     cmd: |
-      export AWS_DEFAULT_PROFILE=rosa
+      export AWS_DEFAULT_PROFILE=rosa_spoke
       rosa describe cluster --cluster={{ rosa_cluster_name }} --output=json | jq -r '.api.url'
   register: api_url
   failed_when: "'Not logged in' in api_url.stderr"
@@ -31,7 +31,7 @@
 - name: Get cluster base domain
   ansible.builtin.shell:
     cmd: |
-      export AWS_DEFAULT_PROFILE=rosa
+      export AWS_DEFAULT_PROFILE=rosa_spoke
       rosa describe cluster --cluster={{ rosa_cluster_name }} --output=json | jq -r '.dns.base_domain'
   register: rosa_cluster_base_domain_result
   failed_when: "'Not logged in' in rosa_cluster_base_domain_result.stderr"
@@ -43,7 +43,7 @@
 - name: Get Hub cluster infra ID
   ansible.builtin.shell:
     cmd: |
-      export AWS_DEFAULT_PROFILE=rosa
+      export AWS_DEFAULT_PROFILE=rosa_spoke
       rosa describe cluster --cluster=hub --output=json | jq -r '.infra_id'
   register: rosa_hub_cluster_infra_id_result
   failed_when: "'Not logged in' in rosa_hub_cluster_infra_id_result.stderr"
@@ -55,7 +55,7 @@
 - name: Get Spoke cluster infra ID
   ansible.builtin.shell:
     cmd: |
-      export AWS_DEFAULT_PROFILE=rosa
+      export AWS_DEFAULT_PROFILE=rosa_spoke
       rosa describe cluster --cluster={{ rosa_cluster_name }} --output=json | jq -r '.infra_id'
   register: rosa_cluster_infra_id_result
   failed_when: "'Not logged in' in rosa_cluster_infra_id_result.stderr"

@@ -50,15 +50,15 @@ data "aws_subnet" "spoke_subnet" {
 
 data "aws_vpc" "hub_vpc" {
   filter {
-    name   = "tag:Name"
-    values = [ "hub-egress" ]
+    name   = "tag:cluster-name"
+    values = [ "hub" ]
   }
 }
 
 data "aws_vpc_endpoint_service" "hub_endpoint_service" {
   filter {
-    name   = "tag:hive.openshift.io/private-link-access-for"
-    values = [ "{{ _rosa_hub_cluster_infra_id }}" ]
+    name   = "tag:cluster-name"
+    values = [ "hub" ]
   }
 }
 

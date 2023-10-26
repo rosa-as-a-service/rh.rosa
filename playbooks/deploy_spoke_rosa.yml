@@ -10,6 +10,7 @@
   become: false
   gather_facts: false
   vars:
+    rosa_aws_account_id: "{{ rosa_spoke_aws_account_id }}"
     rosa_vpc_name: "{{ rosa_spoke_vpc_name }}"
     rosa_vpc_id: "{{ rosa_spoke_vpc_id }}"
     rosa_cluster_name: "{{ rosa_spoke_cluster_name }}"
