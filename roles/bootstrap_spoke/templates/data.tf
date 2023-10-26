@@ -55,6 +55,17 @@ data "aws_vpc" "hub_vpc" {
   }
 }
 
+data "aws_subnet" "hub_public_subnet" {
+  filter {
+    name = "tag:cluster-name"
+    values = ["hub"]
+  }
+  filter {
+    name = "map-public-ip-on-launch"
+    values = [true]
+  }
+}
+
 data "aws_vpc_endpoint_service" "hub_endpoint_service" {
   filter {
     name   = "tag:hive.openshift.io/private-link-access-for"

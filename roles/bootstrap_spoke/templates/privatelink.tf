@@ -93,9 +93,8 @@ resource "aws_vpc_endpoint" "hub" {
   vpc_id            = "${data.aws_vpc.spoke_vpc.id}"
   service_name      = "${data.aws_vpc_endpoint_service.hub_endpoint_service.service_name}"
   vpc_endpoint_type = "Interface"
-
   security_group_ids = ["${data.aws_security_group.spoke_master_security_group.id}"]
-
+  subnet_ids          = ["${data.aws_subnet.hub_public_subnet.id}"]
   private_dns_enabled = true
 }
 
@@ -104,8 +103,7 @@ resource "aws_vpc_endpoint" "spoke_endpoint" {
   vpc_id            = "${data.aws_vpc.hub_vpc.id}"
   service_name      = "${aws_vpc_endpoint_service.spoke_endpoint_service.service_name}"
   vpc_endpoint_type = "Interface"
-
+  subnet_ids          = [for subnet in data.aws_subnet.spoke_subnet : subnet.id]
   security_group_ids = ["${data.aws_security_group.hub_master_security_group.id}"]
-
   private_dns_enabled = true
 }
