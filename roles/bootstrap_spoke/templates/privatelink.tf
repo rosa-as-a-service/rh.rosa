@@ -20,6 +20,19 @@ resource "aws_security_group_rule" "allow_spoke" {
 
 }
 
+resource "aws_lb" "spoke_lb" {
+  name                = "{{ rosa_cluster_name }}-api"
+  internal            = true
+  load_balancer_type  = "network"
+  subnets             = [for subnet in data.aws_subnet.spoke_subnet : subnet.id]
+
+  enable_deletion_protection = false
+
+  tags = {
+    cluster-name = "{{ rosa_cluster_name }}"
+  }
+}
+
 resource "aws_vpc_endpoint_service" "spoke_endpoint_service" {
   acceptance_required        = false
   network_load_balancer_arns = ["${data.aws_lb.spoke_lb.arn}"]

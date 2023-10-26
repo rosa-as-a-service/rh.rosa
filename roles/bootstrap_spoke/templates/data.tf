@@ -14,6 +14,18 @@ data "aws_vpc_endpoint_service" "spoke_endpoint_service" {
   }
 }
 
+data "aws_subnets" "spoke_subnets" {
+  filter {
+    name   = "tag:cluster-name"
+    values = ["{{ rosa_cluster_name }}"]
+  }
+}
+
+data "aws_subnet" "spoke_subnet" {
+  for_each = toset(data.aws_subnets.spoke_subnets.ids)
+  id = each.value
+}
+
 data "aws_vpc" "hub_vpc" {
   filter {
     name   = "tag:Name"
@@ -40,9 +52,9 @@ data "aws_security_group" "hub_master_security_group" {
   }
 }
 
-data "aws_lb" "spoke_lb" {
-  name = "{{ _rosa_cluster_infra_id }}-int"
-}
+# data "aws_lb" "spoke_lb_ingress" {
+#   name = "{{ _rosa_cluster_infra_id }}-int"
+# }
 
 data "aws_route53_zone" "spoke_hosted_zone" {
   name = "{{ _rosa_base_domain }}."
