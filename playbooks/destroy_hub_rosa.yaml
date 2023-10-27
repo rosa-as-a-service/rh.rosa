@@ -1,0 +1,14 @@
+---
+- name: Destroy a hub ROSA instance
+  hosts: localhost
+  become: false
+  gather_facts: false
+  vars:
+    aws_account_id: "{{ aws_hub_account_id }}"
+    aws_access_key_id: "{{ aws_hub_access_key_id }}"
+    aws_secret_access_key: "{{ aws_hub_secret_access_key }}"
+    rosa_cluster_name: "{{ rosa_hub_cluster_name }}"
+  tasks:
+    - name: Deploy ROSA
+      ansible.builtin.import_role:
+        name: rh.rosa.delete_hub

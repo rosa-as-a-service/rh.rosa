@@ -1,0 +1,4 @@
+---
+# defaults for rh.rosa.delete_spoke
+rosa_region: "ap-southeast-2"
+work_dir: /var/tmp
