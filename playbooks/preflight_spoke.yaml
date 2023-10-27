@@ -13,7 +13,7 @@
           aws configure set aws_secret_access_key "{{ aws_spoke_secret_access_key }}" --profile rosa_spoke
           aws configure set profile rosa_spoke
           rosa login --token "{{ rosa_token }}"
-      no_log: true
+      #no_log: true
       changed_when: false
 
     - name: Run network validation tests
