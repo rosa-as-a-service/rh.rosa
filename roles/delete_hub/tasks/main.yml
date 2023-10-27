@@ -1,11 +1,9 @@
 ---
 - name: "Delete {{ rosa_cluster_name }}'s PrivateLink"
   environment:
-    TF_VAR_AWS_ACCESS_KEY_ID: "{{ aws_access_key_id }}"
-    TF_VAR_AWS_SECRET_ACCESS_KEY: "{{ aws_secret_access_key }}"
-    TF_VAR_AWS_DEFAULT_REGION: "{{ rosa_region | default('ap-southeast-2') }}"
     TF_BACKEND_BUCKET: "{{ rosa_cluster_name }}-terraform"
     TF_VAR_token: "{{ rosa_token }}"
+    AWS_DEFAULT_PROFILE: "rosa_{{ rosa_cluster_name }}"
   cloud.terraform.terraform:
     project_path: "{{ work_dir }}/{{ rosa_cluster_name }}/privatelink/terraform"
     state: absent
@@ -17,11 +15,9 @@
 
 - name: "Delete ROSA cluster {{ rosa_cluster_name }}"
   environment:
-    TF_VAR_AWS_ACCESS_KEY_ID: "{{ aws_access_key_id }}"
-    TF_VAR_AWS_SECRET_ACCESS_KEY: "{{ aws_secret_access_key }}"
-    TF_VAR_AWS_DEFAULT_REGION: "{{ rosa_region | default('ap-southeast-2') }}"
     TF_BACKEND_BUCKET: "{{ rosa_cluster_name }}-terraform"
     TF_VAR_token: "{{ rosa_token }}"
+    AWS_DEFAULT_PROFILE: "rosa_{{ rosa_cluster_name }}"
   cloud.terraform.terraform:
     project_path: "{{ work_dir }}/{{ rosa_cluster_name }}/terraform"
     state: absent

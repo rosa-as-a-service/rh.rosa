@@ -2,11 +2,11 @@
 - name: Ensure AWS long lived credentials are configured on the bastion
   ansible.builtin.shell:
     cmd: |
-      export AWS_DEFAULT_PROFILE=rosa_spoke
-      aws configure set region ap-southeast-2 --profile rosa_spoke
-      aws configure set aws_access_key_id "{{ aws_access_key_id }}" --profile rosa_spoke
-      aws configure set aws_secret_access_key "{{ aws_secret_access_key }}" --profile rosa_spoke
-      aws configure set profile rosa_spoke
+      export AWS_DEFAULT_PROFILE=rosa_{{ rosa_cluster_name }}
+      aws configure set region ap-southeast-2 --profile rosa_{{ rosa_cluster_name }}
+      aws configure set aws_access_key_id "{{ aws_access_key_id }}" --profile rosa_{{ rosa_cluster_name }}
+      aws configure set aws_secret_access_key "{{ aws_secret_access_key }}" --profile rosa_{{ rosa_cluster_name }}
+      aws configure set profile rosa_{{ rosa_cluster_name }}
       rosa login --token "{{ rosa_token }}"
   no_log: true
   changed_when: false
@@ -14,7 +14,7 @@
 - name: Get Hub cluster API URL
   ansible.builtin.shell:
     cmd: |
-      export AWS_DEFAULT_PROFILE=rosa_spoke
+      export AWS_DEFAULT_PROFILE=rosa_{{ rosa_cluster_name }}
       rosa describe cluster --cluster=hub --output=json | jq -r '.api.url'
   register: hub_api_url
   failed_when: "'Not logged in' in hub_api_url.stderr or 'Failed to find credentials' in hub_api_url.stderr"
@@ -45,11 +45,9 @@
 
 - name: "Delete {{ rosa_cluster_name }}'s PrivateLink"
   environment:
-    TF_VAR_AWS_ACCESS_KEY_ID: "{{ aws_access_key_id }}"
-    TF_VAR_AWS_SECRET_ACCESS_KEY: "{{ aws_secret_access_key }}"
-    TF_VAR_AWS_DEFAULT_REGION: "{{ rosa_region | default('ap-southeast-2') }}"
     TF_BACKEND_BUCKET: "{{ rosa_cluster_name }}-terraform"
     TF_VAR_token: "{{ rosa_token }}"
+    AWS_DEFAULT_PROFILE: "rosa_{{ rosa_cluster_name }}"
   cloud.terraform.terraform:
     project_path: "{{ work_dir }}/{{ rosa_cluster_name }}/privatelink/terraform"
     state: absent
@@ -61,11 +59,9 @@
 
 - name: "Delete ROSA cluster {{ rosa_cluster_name }}"
   environment:
-    TF_VAR_AWS_ACCESS_KEY_ID: "{{ aws_access_key_id }}"
-    TF_VAR_AWS_SECRET_ACCESS_KEY: "{{ aws_secret_access_key }}"
-    TF_VAR_AWS_DEFAULT_REGION: "{{ rosa_region | default('ap-southeast-2') }}"
     TF_BACKEND_BUCKET: "{{ rosa_cluster_name }}-terraform"
     TF_VAR_token: "{{ rosa_token }}"
+    AWS_DEFAULT_PROFILE: "rosa_{{ rosa_cluster_name }}"
   cloud.terraform.terraform:
     project_path: "{{ work_dir }}/{{ rosa_cluster_name }}/terraform"
     state: absent
