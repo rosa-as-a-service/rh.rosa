@@ -32,3 +32,4 @@
     - name: Bootstrap hub
       ansible.builtin.import_role:
         name: rh.rosa.bootstrap_hub
+      delegate_to: bastion

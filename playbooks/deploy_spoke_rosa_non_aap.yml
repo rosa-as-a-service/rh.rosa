@@ -27,3 +27,4 @@
     - name: Bootstrap spoke
       ansible.builtin.import_role:
         name: rh.rosa.bootstrap_spoke
+      delegate_to: bastion
