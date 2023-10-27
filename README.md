@@ -81,7 +81,7 @@ This playbook deletes all resources created by the **rh.rosa.create** role
 | aws_role_name | "{{ rosa_cluster_name }}-Installer-Role" | Yes | The name of the role used for the preflight validations |
 | rosa_worker_nodes | 2 | Yes | The number of initial work nodes |
 | rosa_worker_instance_type | m5.xlarge | Yes | The EC2 instance type to use for the ROSA worker nodes |
-| rosa_version | "4.13.10" | Yes | The version of ROSA to deploy |
+| rosa_version | "4.13.13" | Yes | The version of ROSA to deploy |
 | rosa_vpc_cidr | N/A | Yes | The subnet of the VPC EG 10.0.0.0/24 |
 | rosa_vpc_name | N/A | Yes | The Name of the VPC as found in `Tag:Name` |
 | rosa_token | N/A | Yes | The offline OCM token |

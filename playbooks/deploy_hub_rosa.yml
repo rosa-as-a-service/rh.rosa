@@ -14,7 +14,6 @@
     aws_access_key_id: "{{ aws_hub_access_key_id }}"
     aws_secret_access_key: "{{ aws_hub_secret_access_key }}"
     rosa_vpc_name: "{{ rosa_hub_vpc_name }}"
-    rosa_vpc_id: "{{ rosa_hub_vpc_id }}"
     rosa_cluster_name: "{{ rosa_hub_cluster_name }}"
     rosa_vpc_cidr: "{{ rosa_hub_vpc_cidr }}"
     rosa_worker_nodes: "{{ rosa_hub_worker_nodes }}"

@@ -19,7 +19,7 @@ data "aws_vpc" "tenent_vpc" {
 data "aws_subnets" "tenent_subnet_ids" {
   filter {
     name   = "tag:Name"
-    values = ["{{ rosa_subnets[0].name | default(rosa_vpc_name + '-2a') }}", "{{ rosa_subnets[1].name | default(rosa_vpc_name + '-2b') }}"]
+    values = ["{{ rosa_subnets[0].name }}", "{{ rosa_subnets[1].name }}"]
   }
 }
 
