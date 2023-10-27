@@ -53,11 +53,11 @@
   cloud.terraform.terraform:
     project_path: "{{ work_dir }}/{{ rosa_cluster_name }}/privatelink/terraform"
     state: absent
-  register: "rh.privatelink.delete"
+  register: rosa_privatelink_delete
 
 - name: "Show output"
   ansible.builtin.debug:
-    msg: "{{ rh.privatelink.delete.outputs }}"
+    msg: "{{ rosa_privatelink_delete.outputs }}"
 
 - name: "Delete ROSA cluster {{ rosa_cluster_name }}"
   environment:
@@ -69,8 +69,8 @@
   cloud.terraform.terraform:
     project_path: "{{ work_dir }}/{{ rosa_cluster_name }}/terraform"
     state: absent
-  register: "rh.rosa.delete"
+  register: "rosa_delete"
 
 - name: "Show output"
   ansible.builtin.debug:
-    msg: "{{ rh.rosa.delete.outputs }}"
+    msg: "{{ rosa_delete.outputs }}"
