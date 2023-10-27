@@ -37,6 +37,9 @@ resource "aws_lb_target_group" "spoke_api_target_group" {
   protocol    = "TCP"
   target_type = "ip"
   vpc_id      = data.aws_vpc.spoke_vpc.id
+  tags = {
+    cluster-name = "{{ rosa_cluster_name }}"
+  }
 }
 
 resource "aws_lb_target_group_attachment" "spoke_api_target_group_attach_1" {
@@ -61,10 +64,12 @@ resource "aws_lb_listener" "spoke_api_listener" {
   load_balancer_arn = aws_lb.spoke_lb.arn
   port              = "6443"
   protocol          = "TCP"
-
   default_action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.spoke_api_target_group.arn
+  }
+  tags = {
+    cluster-name = "{{ rosa_cluster_name }}"
   }
 }
 
@@ -72,6 +77,9 @@ resource "aws_vpc_endpoint_service" "spoke_endpoint_service" {
   acceptance_required        = false
   network_load_balancer_arns = ["${aws_lb.spoke_lb.arn}"]
   private_dns_name           = "*.{{ rosa_cluster_name }}.{{ _rosa_base_domain }}"
+  tags = {
+    cluster-name = "{{ rosa_cluster_name }}"
+  }
 }
 
 resource "aws_route53_record" "spoke_base_domain_verification" {
@@ -96,6 +104,9 @@ resource "aws_vpc_endpoint" "hub" {
   security_group_ids = ["${data.aws_security_group.spoke_master_security_group.id}"]
   subnet_ids          = [for subnet in data.aws_subnet.spoke_subnet : subnet.id]
   private_dns_enabled = true
+  tags = {
+    cluster-name = "{{ rosa_cluster_name }}"
+  }
 }
 
 ## Create a VPC Endpoint in the Hub to consume 6443/tcp from the Spoke via PrivateLink
@@ -106,4 +117,7 @@ resource "aws_vpc_endpoint" "spoke_endpoint" {
   subnet_ids          = ["{{ rosa_hub_public_subnet_id }}"]
   security_group_ids = ["${data.aws_security_group.hub_master_security_group.id}"]
   private_dns_enabled = true
+  tags = {
+    cluster-name = "{{ rosa_cluster_name }}"
+  }
 }

@@ -15,6 +15,9 @@ resource "aws_lb_target_group" "hub_api_target_group" {
   protocol    = "TCP"
   target_type = "ip"
   vpc_id      = data.aws_vpc.hub_vpc.id
+  tags = {
+    cluster-name = "{{ rosa_cluster_name }}"
+  }
 }
 
 resource "aws_lb_target_group_attachment" "hub_api_target_group_attach_1" {
@@ -39,10 +42,12 @@ resource "aws_lb_listener" "hub_api_listener" {
   load_balancer_arn = aws_lb.hub_lb.arn
   port              = "6443"
   protocol          = "TCP"
-
   default_action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.hub_api_target_group.arn
+  }
+  tags = {
+    cluster-name = "{{ rosa_cluster_name }}"
   }
 }
 
@@ -50,6 +55,9 @@ resource "aws_vpc_endpoint_service" "hub_endpoint_service" {
   acceptance_required        = false
   network_load_balancer_arns = ["${aws_lb.hub_lb.arn}"]
   private_dns_name           = "*.{{ rosa_cluster_name }}.{{ _rosa_base_domain }}"
+  tags = {
+    cluster-name = "{{ rosa_cluster_name }}"
+  }
 }
 
 resource "aws_route53_record" "hub_base_domain_verification" {
