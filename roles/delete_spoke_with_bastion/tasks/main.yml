@@ -76,16 +76,22 @@
     msg: "{{ rosa_privatelink_delete.outputs }}"
   delegate_to: bastion
 
-- name: "Delete ROSA cluster {{ rosa_cluster_name }}"
+- name: "Destroy ROSA cluster: {{ rosa_cluster_name }}"
   environment:
     TF_BACKEND_BUCKET: "{{ rosa_cluster_name }}-terraform"
-    TF_VAR_token: "{{ rosa_token }}"
     AWS_DEFAULT_PROFILE: "rosa_{{ rosa_cluster_name }}"
-  cloud.terraform.terraform:
-    project_path: "{{ work_dir }}/{{ rosa_cluster_name }}/terraform"
-    state: absent
-  register: rosa_delete
+  ansible.builtin.shell:
+    cmd: |
+      cd "{{ work_dir }}/{{ rosa_cluster_name }}/terraform"
+      terraform destroy -auto-approve
+  async: 7200
+  poll: 0
+  register: create_cluster
 
-- name: "Show output"
-  ansible.builtin.debug:
-    msg: "{{ rosa_delete.outputs }}"
+- name: "Wait for cluster to be destroyed"
+  ansible.builtin.async_status:
+    jid: "{{ create_cluster.ansible_job_id }}"
+  register: job_result
+  until: job_result.finished
+  retries: 240
+  delay: 30
