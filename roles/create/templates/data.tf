@@ -19,7 +19,7 @@ data "aws_vpc" "tenent_vpc" {
 data "aws_subnets" "tenent_subnet_ids" {
   filter {
     name   = "tag:Name"
-    values = ["{{ rosa_subnets[0].name }}", "{{ rosa_subnets[1].name }}"]
+    values = {{ rosa_subnets | community.general.json_query('[*].name') | to_json }}
   }
 }
 
