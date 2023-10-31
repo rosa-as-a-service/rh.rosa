@@ -7,7 +7,7 @@
 
 - name: Create s3 bucket to store state
   environment:
-    AWS_DEFAULT_PROFILE: rosa
+    AWS_DEFAULT_PROFILE: "rosa_{{ rosa_cluster_name }}"
   amazon.cloud.s3_bucket:
     bucket_name:  "{{ rosa_cluster_name }}-terraform"
     state: present

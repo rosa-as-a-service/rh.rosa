@@ -1,0 +1,7 @@
+---
+- name: Import data
+  awx.awx.import:
+    assets: "{{ lookup('file', 'org.json') | from_json() }}"
+    controller_host: "{{ aap_url }}"
+    controller_username: "{{ aap_admin_username | default('admin') }}"
+    controller_password: "{{ aap_admin_password }}"
