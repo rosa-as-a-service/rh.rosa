@@ -18,6 +18,11 @@ variable "url" {
   default = "https://api.openshift.com"
 }
 
+variable "s3_bucket_name" {
+  type = string
+  default = ""
+}
+
 ################################
 # OCM SHARED
 ################################

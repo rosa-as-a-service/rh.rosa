@@ -10,11 +10,11 @@ terraform {
     }
   }
   backend "s3" {
-    bucket = "${var.rosa_cluster_name}-terraform"
-    key    = "rosa/terraform.tfstate"
-    region = "ap-southeast-2"
-    access_key             = "${var.AWS_ACCESS_KEY_ID}"
-    secret_key             = "${var.AWS_SECRET_ACCESS_KEY}"
+    bucket     = "{{ s3_bucket_name }}"
+    key        = "rosa/terraform.tfstate"
+    region     = "ap-southeast-2"
+    access_key = "{{ aws_access_key_id }}"
+    secret_key = "{{ aws_secret_access_key }}"
   }
 }
 

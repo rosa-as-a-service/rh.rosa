@@ -1,4 +1,8 @@
 ---
+- name: Set S3 bucket name
+  ansible.builtin.set_fact:
+    s3_bucket_name: "{{ rosa_cluster_name }}-terraform"
+
 - name: Copy terraform components to work_dir
   ansible.builtin.copy:
     src: files/terraform/
@@ -13,6 +17,7 @@
     - hub.tfvars.json
     - data.tf
     - privatelink.tf
+    - providers.tf
 
 - name: "Create PrivateLink for {{ rosa_cluster_name }}"
   environment:

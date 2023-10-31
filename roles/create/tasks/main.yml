@@ -17,6 +17,10 @@
   #no_log: true
   changed_when: false
 
+- name: Set S3 bucket name
+  ansible.builtin.set_fact:
+    s3_bucket_name: "{{ rosa_cluster_name }}-terraform"
+
 - name: Create s3 bucket to store state
   environment:
     AWS_DEFAULT_PROFILE: "rosa_{{ rosa_cluster_name }}"
@@ -37,6 +41,7 @@
   with_items:
     - terraform.tfvars.json
     - data.tf
+    - providers.tf
 
 - name: "Create ROSA cluster: {{ rosa_cluster_name }}"
   environment:
