@@ -34,7 +34,7 @@
 
 - name: Set Spoke API URL
   ansible.builtin.set_fact:
-    bootstrap_api_url: "{{ api_url.stdout }}"
+    api_url: "{{ api_url.stdout }}"
 
 - name: Get cluster base domain
   ansible.builtin.shell:
