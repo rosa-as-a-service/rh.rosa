@@ -20,7 +20,7 @@
       ansible.builtin.shell:
         cmd: |
           export AWS_DEFAULT_PROFILE=rosa_{{ rosa_cluster_name }}
-          rosa verify network --watch --status-only --subnet-ids "{{ rosa_subnets | map(attribute='id') | join(',') }}" --region="ap-southeast-2" --role-arn="arn:aws:iam::{{ rosa_{{ rosa_cluster_name }}_aws_account_id }}:role/{{ rosa_aws_role_name | default(rosa_cluster_name + "-Installer-Role") }}"
+          rosa verify network --watch --status-only --subnet-ids "{{ rosa_subnets | map(attribute='id') | join(',') }}" --region="ap-southeast-2" --role-arn="arn:aws:iam::{{ rosa_spoke_aws_account_id }}:role/{{ rosa_aws_role_name | default(rosa_cluster_name + "-Installer-Role") }}"
       register: egress_validation
       changed_when: false
 
