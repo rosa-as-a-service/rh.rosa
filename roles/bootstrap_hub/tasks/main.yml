@@ -132,7 +132,6 @@
           kubernetes.io/metadata.name: rosa-as-a-service
   failed_when: false
 
-
 - name: configure AAP SSO secret
   kubernetes.core.k8s:
     host: "{{ hub_api_url }}"

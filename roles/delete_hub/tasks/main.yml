@@ -1,4 +1,33 @@
 ---
+- name: Copy terraform module to work_dir
+  ansible.builtin.copy:
+    src: files/rosa/terraform/
+    remote_src: false
+    dest: "{{ work_dir }}/{{ rosa_cluster_name }}/terraform/"
+
+- name: Copy terraform files to work_dir
+  ansible.builtin.template:
+    src: "rosa/{{ item }}"
+    dest: "{{ work_dir }}/{{ rosa_cluster_name }}/terraform/{{ item }}"
+  with_items:
+    - terraform.tfvars.json
+    - data.tf
+
+- name: Copy terraform components to work_dir
+  ansible.builtin.copy:
+    src: files/privatelink/terraform/
+    remote_src: false
+    dest: "{{ work_dir }}/{{ rosa_cluster_name }}/privatelink/terraform/"
+
+- name: Copy terraform files to work_dir
+  ansible.builtin.template:
+    src: "privatelink/{{ item }}"
+    dest: "{{ work_dir }}/{{ rosa_cluster_name }}/privatelink/terraform/{{ item }}"
+  with_items:
+    - hub.tfvars.json
+    - data.tf
+    - privatelink.tf
+
 - name: "Delete {{ rosa_cluster_name }}'s PrivateLink"
   environment:
     TF_BACKEND_BUCKET: "{{ rosa_cluster_name }}-terraform"
