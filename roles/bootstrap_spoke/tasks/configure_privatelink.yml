@@ -22,7 +22,7 @@
 - name: "Create PrivateLink for {{ rosa_cluster_name }}"
   environment:
     TF_BACKEND_BUCKET: "{{ rosa_cluster_name }}-terraform"
-    AWS_DEFAULT_PROFILE: rosa_spoke
+    AWS_DEFAULT_PROFILE: "rosa_{{ rosa_cluster_name }}"
   ansible.builtin.shell:
     cmd: |
       cd "{{ work_dir }}/{{ rosa_cluster_name }}/privatelink/terraform"
