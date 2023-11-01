@@ -7,13 +7,6 @@ data "aws_vpc" "spoke_vpc" {
   }
 }
 
-# data "aws_vpc_endpoint_service" "spoke_endpoint_service" {
-#   filter {
-#     name   = "tag:hive.openshift.io/private-link-access-for"
-#     values = [ "{{ _rosa_cluster_infra_id }}" ]
-#   }
-# }
-
 data "aws_network_interface" "master_0" {
   filter {
     name = "tag:Name"
@@ -38,8 +31,8 @@ data "aws_network_interface" "master_2" {
 
 data "aws_subnets" "spoke_subnets" {
   filter {
-    name   = "tag:cluster-name"
-    values = ["{{ rosa_cluster_name }}"]
+    name   = "tag:Name"
+    values = {{ rosa_subnets | community.general.json_query('[*].name') | to_json }}
   }
 }
 
