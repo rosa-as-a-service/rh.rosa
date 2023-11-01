@@ -80,13 +80,6 @@
     validate_certs: false
   register: hub_openshift_auth_results
 
-# - name: Retrieve authentication token
-#   community.okd.openshift_auth:
-#     username: "{{ rosa_admin_username }}"
-#     password: "{{ rosa_admin_password }}"
-#     host: "{{ api_url }}"
-#     validate_certs: false
-#   register: openshift_auth_results
 - name: Retrieve authentication token
   community.okd.openshift_auth:
     username: "{{ rosa_admin_username }}"
@@ -95,11 +88,6 @@
     validate_certs: false
   register: openshift_auth_results
   delegate_to: "{{ spoke_bastion }}"
-# - name: Debug spoke API
-#   ansible.builtin.set_fact:
-#     openshift_auth_results:
-#       openshift_auth:
-#         api_key: "{{ debug_spoke_key }}"
 
 - name: Configure PrivateLink
   ansible.builtin.import_tasks: configure_privatelink.yml
