@@ -94,13 +94,6 @@ resource "time_sleep" "wait_for_base_domain_dns_propogration" {
   create_duration = "120s"
 }
 
-# resource "time_sleep" "domain_dns_validation" {
-#   create_duration = "600s"
-#   triggers = {
-#     verification_state = aws_vpc_endpoint_service.spoke_endpoint_service.private_dns_name_configuration[0].state
-#   }
-# }
-
 resource "aws_vpc_endpoint" "hub" {
   vpc_id            = "${data.aws_vpc.spoke_vpc.id}"
   service_name      = "${data.aws_vpc_endpoint_service.hub_endpoint_service.service_name}"
