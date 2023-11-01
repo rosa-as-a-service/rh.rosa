@@ -31,6 +31,42 @@
     validate_certs: false
   register: hub_openshift_auth_results
 
+- name: Get cluster base domain
+  ansible.builtin.shell:
+    cmd: |
+      export AWS_DEFAULT_PROFILE=rosa_{{ rosa_cluster_name }}
+      rosa describe cluster --cluster={{ rosa_cluster_name }} --output=json | jq -r '.dns.base_domain'
+  register: rosa_cluster_base_domain_result
+  failed_when: "'Not logged in' in rosa_cluster_base_domain_result.stderr or 'Failed to find credentials' in rosa_cluster_base_domain_result.stderr"
+
+- name: Set ROSA cluster base domain
+  ansible.builtin.set_fact:
+    _rosa_base_domain: "{{ rosa_cluster_base_domain_result.stdout }}"
+
+- name: Get Hub cluster infra ID
+  ansible.builtin.shell:
+    cmd: |
+      export AWS_DEFAULT_PROFILE=rosa_{{ rosa_cluster_name }}
+      rosa describe cluster --cluster=hub --output=json | jq -r '.infra_id'
+  register: rosa_hub_cluster_infra_id_result
+  failed_when: "'Not logged in' in rosa_hub_cluster_infra_id_result.stderr or 'Failed to find credentials' in rosa_hub_cluster_infra_id_result.stderr"
+
+- name: Set ROSA Hub cluster infra ID
+  ansible.builtin.set_fact:
+    _rosa_hub_cluster_infra_id: "{{ rosa_hub_cluster_infra_id_result.stdout }}"
+
+- name: Get Spoke cluster infra ID
+  ansible.builtin.shell:
+    cmd: |
+      export AWS_DEFAULT_PROFILE=rosa_{{ rosa_cluster_name }}
+      rosa describe cluster --cluster={{ rosa_cluster_name }} --output=json | jq -r '.infra_id'
+  register: rosa_cluster_infra_id_result
+  failed_when: "'Not logged in' in rosa_cluster_infra_id_result.stderr or 'Failed to find credentials' in rosa_cluster_infra_id_result.stderr"
+
+- name: Set ROSA cluster infra ID
+  ansible.builtin.set_fact:
+    _rosa_cluster_infra_id: "{{ rosa_cluster_infra_id_result.stdout }}"
+
 - name: "Delete {{ rosa_cluster_name }} from ACM"
   kubernetes.core.k8s:
     resource_definition:
@@ -78,19 +114,26 @@
     - privatelink.tf
     - providers.tf
 
-- name: "Delete {{ rosa_cluster_name }}'s PrivateLink"
+- name: "Destroy PrivateLink for ROSA cluster: {{ rosa_cluster_name }}"
   environment:
     TF_BACKEND_BUCKET: "{{ rosa_cluster_name }}-terraform"
-    TF_VAR_token: "{{ rosa_token }}"
     AWS_DEFAULT_PROFILE: "rosa_{{ rosa_cluster_name }}"
-  cloud.terraform.terraform:
-    project_path: "{{ work_dir }}/{{ rosa_cluster_name }}/privatelink/terraform"
-    state: absent
-  register: rh_privatelink_delete
+  ansible.builtin.shell:
+    cmd: |
+      cd "{{ work_dir }}/{{ rosa_cluster_name }}/privatelink/terraform"
+      terraform init
+      terraform destroy -auto-approve
+  async: 7200
+  poll: 0
+  register: destroy_privatelink
 
-- name: "Show output"
-  ansible.builtin.debug:
-    msg: "{{ rh_privatelink_delete.outputs }}"
+- name: "Wait for PrivateLink to be destroyed"
+  ansible.builtin.async_status:
+    jid: "{{ destroy_privatelink.ansible_job_id }}"
+  register: job_result
+  until: job_result.finished
+  retries: 240
+  delay: 30
 
 - name: "Destroy ROSA cluster: {{ rosa_cluster_name }}"
   environment:
@@ -99,6 +142,7 @@
   ansible.builtin.shell:
     cmd: |
       cd "{{ work_dir }}/{{ rosa_cluster_name }}/terraform"
+      terraform init
       terraform destroy -auto-approve
   async: 7200
   poll: 0
