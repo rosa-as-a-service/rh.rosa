@@ -8,7 +8,6 @@ resource "aws_security_group_rule" "allow_hub" {
   cidr_blocks      = ["${data.aws_vpc.hub_vpc.cidr_block}"]
 }
 
-## Modify hub-infraid-master-sg securitygroup to allow the Spoke subnet to consume 6443/tcp
 resource "aws_security_group_rule" "allow_spoke" {
   description = "Allow Kubernetes API inbound traffic from {{ rosa_cluster_name }}"
   security_group_id = "${data.aws_security_group.hub_master_security_group.id}"
@@ -95,8 +94,13 @@ resource "time_sleep" "wait_for_base_domain_dns_propogration" {
   create_duration = "120s"
 }
 
-# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_endpoint
-## Create a VPC Endpoint in the Spoke to consume 6443/tcp from the Hub via PrivateLink
+# resource "time_sleep" "domain_dns_validation" {
+#   create_duration = "600s"
+#   triggers = {
+#     verification_state = aws_vpc_endpoint_service.spoke_endpoint_service.private_dns_name_configuration[0].state
+#   }
+# }
+
 resource "aws_vpc_endpoint" "hub" {
   vpc_id            = "${data.aws_vpc.spoke_vpc.id}"
   service_name      = "${data.aws_vpc_endpoint_service.hub_endpoint_service.service_name}"
@@ -109,7 +113,6 @@ resource "aws_vpc_endpoint" "hub" {
   }
 }
 
-## Create a VPC Endpoint in the Hub to consume 6443/tcp from the Spoke via PrivateLink
 resource "aws_vpc_endpoint" "spoke_endpoint" {
   vpc_id            = "${data.aws_vpc.hub_vpc.id}"
   service_name      = "${aws_vpc_endpoint_service.spoke_endpoint_service.service_name}"
