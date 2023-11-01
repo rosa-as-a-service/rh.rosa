@@ -11,4 +11,5 @@
   tasks:
     - name: Deploy ROSA
       ansible.builtin.import_role:
-        name: rh.rosa.delete_spoke_with_bastion
+        name: rh.rosa.delete_spoke
+      delegate_to: bastion

@@ -43,6 +43,41 @@
     api_key: "{{ hub_openshift_auth_results.openshift_auth.api_key }}"
     validate_certs: false
 
+- name: Set S3 bucket name
+  ansible.builtin.set_fact:
+    s3_bucket_name: "{{ rosa_cluster_name }}-terraform"
+
+- name: Copy terraform module to work_dir
+  ansible.builtin.copy:
+    src: files/rosa/terraform/
+    remote_src: false
+    dest: "{{ work_dir }}/{{ rosa_cluster_name }}/terraform/"
+
+- name: Copy terraform files to work_dir
+  ansible.builtin.template:
+    src: "rosa/{{ item }}"
+    dest: "{{ work_dir }}/{{ rosa_cluster_name }}/terraform/{{ item }}"
+  with_items:
+    - terraform.tfvars.json
+    - data.tf
+    - providers.tf
+
+- name: Copy terraform components to work_dir
+  ansible.builtin.copy:
+    src: files/privatelink/terraform/
+    remote_src: false
+    dest: "{{ work_dir }}/{{ rosa_cluster_name }}/privatelink/terraform/"
+
+- name: Copy terraform files to work_dir
+  ansible.builtin.template:
+    src: "privatelink/{{ item }}"
+    dest: "{{ work_dir }}/{{ rosa_cluster_name }}/privatelink/terraform/{{ item }}"
+  with_items:
+    - spoke.tfvars.json
+    - data.tf
+    - privatelink.tf
+    - providers.tf
+
 - name: "Delete {{ rosa_cluster_name }}'s PrivateLink"
   environment:
     TF_BACKEND_BUCKET: "{{ rosa_cluster_name }}-terraform"
@@ -51,11 +86,11 @@
   cloud.terraform.terraform:
     project_path: "{{ work_dir }}/{{ rosa_cluster_name }}/privatelink/terraform"
     state: absent
-  register: rosa_privatelink_delete
+  register: rh_privatelink_delete
 
 - name: "Show output"
   ansible.builtin.debug:
-    msg: "{{ rosa_privatelink_delete.outputs }}"
+    msg: "{{ rh_privatelink_delete.outputs }}"
 
 - name: "Destroy ROSA cluster: {{ rosa_cluster_name }}"
   environment:
