@@ -2,3 +2,4 @@
 # defaults file for bootstrap-spoke
 rosa_region: "ap-southeast-2"
 work_dir: /var/tmp
+rosa_admin_username: cluster-admin
