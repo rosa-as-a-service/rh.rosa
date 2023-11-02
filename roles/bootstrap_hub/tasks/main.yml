@@ -240,5 +240,21 @@
             access_key: "{{ aws_access_key_id | b64encode}}"
             secret_key: "{{ aws_secret_access_key | b64encode }}"
 
+- name: openshift-logging secret
+  kubernetes.core.k8s:
+    host: "{{ hub_api_url }}"
+    api_key: "{{ openshift_auth_results.openshift_auth.api_key }}"
+    validate_certs: false
+    resource_definition:
+      apiVersion: v1
+      kind: Secret
+      metadata:
+        name: aws-credentials
+        namespace: openshift-logging
+      type: Opaque
+      stringData:
+        aws_access_key_id: "{{ aws_access_key_id | b64encode}}"
+        aws_secret_access_key: "{{ aws_secret_access_key | b64encode }}"
+
 - name: Configure PrivateLink
   ansible.builtin.import_tasks: configure_privatelink.yml
