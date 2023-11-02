@@ -113,3 +113,34 @@
     api_key: "{{ hub_openshift_auth_results.openshift_auth.api_key }}"
     validate_certs: false
 
+# This namespace is later managed by Red Hat Advanced Cluster Management for Kubernetes - Amazon S3 Operator, but is required for the initial bootstrapping to complete
+- name: configure openshift-logging project
+  kubernetes.core.k8s:
+    host: "{{ hub_api_url }}"
+    api_key: "{{ openshift_auth_results.openshift_auth.api_key }}"
+    validate_certs: false
+    resource_definition:
+      kind: Project
+      apiVersion: project.openshift.io/v1
+      metadata:
+        name: openshift-logging
+        labels:
+          kubernetes.io/metadata.name: openshift-logging
+  failed_when: false
+
+- name: openshift-logging secret
+  kubernetes.core.k8s:
+    host: "{{ hub_api_url }}"
+    api_key: "{{ openshift_auth_results.openshift_auth.api_key }}"
+    validate_certs: false
+    resource_definition:
+      apiVersion: v1
+      kind: Secret
+      metadata:
+        name: aws-credentials
+        namespace: openshift-logging
+      type: Opaque
+      stringData:
+        aws_access_key_id: "{{ aws_access_key_id | b64encode}}"
+        aws_secret_access_key: "{{ aws_secret_access_key | b64encode }}"
+
