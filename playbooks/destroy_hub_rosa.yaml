@@ -7,7 +7,12 @@
     aws_account_id: "{{ aws_hub_account_id }}"
     aws_access_key_id: "{{ aws_hub_access_key_id }}"
     aws_secret_access_key: "{{ aws_hub_secret_access_key }}"
+    rosa_vpc_name: "{{ rosa_hub_vpc_name }}"
     rosa_cluster_name: "{{ rosa_hub_cluster_name }}"
+    rosa_vpc_cidr: "{{ rosa_hub_vpc_cidr }}"
+    rosa_worker_nodes: "{{ rosa_hub_worker_nodes }}"
+    rosa_worker_instance_type: "{{ rosa_hub_worker_instance_type }}"
+    rosa_subnets: "{{ rosa_hub_subnets }}"
   tasks:
     - name: Deploy ROSA
       ansible.builtin.import_role:
