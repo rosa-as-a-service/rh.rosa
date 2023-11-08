@@ -9,6 +9,8 @@ metadata:
     vendor: auto-detect
     cluster.open-cluster-management.io/clusterset: default
     cluster-type: spoke
+    cluster-upgrades: automatic
+    cluster-compliance: strict
   annotations: {}
 spec:
   hubAcceptsClient: true
