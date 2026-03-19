@@ -1,15 +1,26 @@
-module "oidc_config" {
+resource "rhcs_rosa_oidc_config" "oidc_config" {
+  managed = true
+}
 
-  token                = var.token
-  url                  = var.url
-  source               = "./modules/oidc-provider-modules"
-  managed              = true
-  operator_role_prefix = var.operator_role_prefix
-  account_role_prefix  = var.account_role_prefix
-  tags                 = var.tags
-  cloud_region         = var.cloud_region
+resource "aws_iam_openid_connect_provider" "oidc_provider" {
+  url = "https://${rhcs_rosa_oidc_config.oidc_config.oidc_endpoint_url}"
 
-  depends_on = [
-    resource.rhcs_cluster_wait.rosa_sts_cluster
+  client_id_list = [
+    "openshift",
+    "sts.amazonaws.com",
   ]
+
+  thumbprint_list = [rhcs_rosa_oidc_config.oidc_config.thumbprint]
+
+  tags = var.tags
+}
+
+resource "time_sleep" "oidc_resources_wait" {
+  create_duration  = "10s"
+  destroy_duration = "10s"
+  triggers = {
+    oidc_config_id    = rhcs_rosa_oidc_config.oidc_config.id
+    oidc_endpoint_url = rhcs_rosa_oidc_config.oidc_config.oidc_endpoint_url
+    oidc_provider_url = aws_iam_openid_connect_provider.oidc_provider.url
+  }
 }

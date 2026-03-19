@@ -5,58 +5,49 @@
     state: directory
     mode: '0755'
 
-- name: Ensure AWS long lived credentials are configured
-  ansible.builtin.shell:
-    cmd: |
-      export AWS_DEFAULT_PROFILE=rosa_{{ rosa_cluster_name }}
-      aws configure set region ap-southeast-2 --profile rosa_{{ rosa_cluster_name }}
-      aws configure set aws_access_key_id "{{ aws_access_key_id }}" --profile rosa_{{ rosa_cluster_name }}
-      aws configure set aws_secret_access_key "{{ aws_secret_access_key }}" --profile rosa_{{ rosa_cluster_name }}
-      aws configure set profile rosa_{{ rosa_cluster_name }}
-      rosa login --token "{{ rosa_token }}"
-  #no_log: true
+- name: Login to ROSA
+  ansible.builtin.command:
+    cmd: rosa login --token "{{ rosa_token }}"
+  no_log: true
   changed_when: false
 
 - name: Set S3 bucket name
   ansible.builtin.set_fact:
     s3_bucket_name: "{{ rosa_cluster_name }}-terraform"
 
-- name: Create s3 bucket to store state
-  environment:
-    AWS_DEFAULT_PROFILE: "rosa_{{ rosa_cluster_name }}"
-  amazon.cloud.s3_bucket:
-    bucket_name:  "{{ rosa_cluster_name }}-terraform"
+- name: Create S3 bucket for Terraform state
+  amazon.aws.s3_bucket:
+    name: "{{ s3_bucket_name }}"
+    region: "{{ rosa_region }}"
     state: present
 
-- name: Copy terraform module to work_dir
+- name: Copy terraform files to work_dir
   ansible.builtin.copy:
     src: files/terraform/
     remote_src: false
     dest: "{{ work_dir }}/{{ rosa_cluster_name }}/terraform/"
 
-- name: Copy terraform files to work_dir
+- name: Template terraform configuration files
   ansible.builtin.template:
     src: "{{ item }}"
     dest: "{{ work_dir }}/{{ rosa_cluster_name }}/terraform/{{ item }}"
-  with_items:
+  loop:
     - terraform.tfvars.json
     - data.tf
     - providers.tf
 
-- name: "Create ROSA cluster: {{ rosa_cluster_name }}"
-  environment:
-    TF_BACKEND_BUCKET: "{{ rosa_cluster_name }}-terraform"
-    AWS_DEFAULT_PROFILE: "rosa_{{ rosa_cluster_name }}"
-  ansible.builtin.shell:
-    cmd: |
-      cd "{{ work_dir }}/{{ rosa_cluster_name }}/terraform"
-      terraform init
-      terraform apply -auto-approve
+- name: "Create ROSA HCP cluster: {{ rosa_cluster_name }}"
+  cloud.terraform.terraform:
+    project_path: "{{ work_dir }}/{{ rosa_cluster_name }}/terraform"
+    state: present
+    force_init: true
+    variables_files:
+      - "{{ work_dir }}/{{ rosa_cluster_name }}/terraform/terraform.tfvars.json"
   async: 7200
   poll: 0
   register: create_cluster
 
-- name: "Wait for cluster to be created"
+- name: "Wait for cluster creation to complete"
   ansible.builtin.async_status:
     jid: "{{ create_cluster.ansible_job_id }}"
   register: job_result

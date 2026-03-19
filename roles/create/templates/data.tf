@@ -1,29 +1,23 @@
-data "aws_caller_identity" "current" {}
-
-data "rhcs_rosa_operator_roles" "operator_roles" {
-  operator_role_prefix = "{{ rosa_cluster_name }}"
-  account_role_prefix  = "{{ rosa_cluster_name }}"
+{% if rosa_subnet_ids is defined %}
+variable "subnet_ids" {
+  type    = list(string)
+  default = {{ rosa_subnet_ids | to_json }}
 }
 
-data "rhcs_policies" "all_policies" {}
-
-data "rhcs_versions" "all" {}
-
-data "aws_vpc" "tenent_vpc" {
-  filter {
-    name   = "tag:Name"
-    values = ["{{ rosa_vpc_name }}"]
-  }
+data "aws_subnet" "cluster_subnet" {
+  for_each = toset(var.subnet_ids)
+  id       = each.value
 }
-
-data "aws_subnets" "tenent_subnet_ids" {
+{% else %}
+data "aws_subnets" "cluster_subnets" {
   filter {
     name   = "tag:Name"
     values = {{ rosa_subnets | community.general.json_query('[*].name') | to_json }}
   }
 }
 
-data "aws_subnet" "tenent_subnet_id" {
-  for_each = toset(data.aws_subnets.tenent_subnet_ids.ids)
-  id = each.value
+data "aws_subnet" "cluster_subnet" {
+  for_each = toset(data.aws_subnets.cluster_subnets.ids)
+  id       = each.value
 }
+{% endif %}

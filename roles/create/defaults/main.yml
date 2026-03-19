@@ -1,6 +1,8 @@
 ---
-# defaults file for rh.rosa.create
 rosa_region: "ap-southeast-2"
-rosa_version: "4.13.13"
+rosa_version: "4.18.0"
 rosa_worker_nodes: 2
+rosa_worker_instance_type: "m5.xlarge"
+rosa_private: false
+rosa_admin_username: "cluster-admin"
 work_dir: /var/tmp

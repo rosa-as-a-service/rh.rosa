@@ -8,7 +8,7 @@ namespace: rh
 name: rosa
 
 # The version of the collection. Must be compatible with semantic versioning
-version: 1.0.0
+version: 2.0.0
 
 # The path to the Markdown (.md) readme file. This path is relative to the root of the collection
 readme: README.md
@@ -20,7 +20,7 @@ authors:
 
 ### OPTIONAL but strongly recommended
 # A short summary description of the collection
-description: Used to manage the lifecycle of ROSA instances
+description: Used to manage the lifecycle of ROSA HCP instances
 
 # Either a single license or a list of licenses for content inside of a collection. Ansible Galaxy currently only
 # accepts L(SPDX,https://spdx.org/licenses/) licenses. This key is mutually exclusive with 'license_file'
@@ -35,6 +35,7 @@ license_file: 'LICENSE'
 # requirements as 'namespace' and 'name'
 tags:
   - rosa
+  - rosahcp
   - ansible
   - terraform
 
@@ -45,7 +46,7 @@ tags:
 dependencies:
   "kubernetes.core": "*"
   "cloud.terraform": "*"
-  "amazon.cloud": "*"
+  "amazon.aws": "*"
 # The URL of the originating SCM repository
 repository: https://github.com/rosa-as-a-service/rh.rosa
 
